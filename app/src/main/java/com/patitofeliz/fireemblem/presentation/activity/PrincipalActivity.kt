@@ -6,22 +6,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.patitofeliz.fireemblem.R
-import com.patitofeliz.fireemblem.databinding.ActivityLoginBinding
+import com.patitofeliz.fireemblem.databinding.ActivityPrincipalBinding
 
-class LoginActivity : AppCompatActivity()
+class PrincipalActivity : AppCompatActivity()
 {
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityPrincipalBinding
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityPrincipalBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnInvitado.setOnClickListener {
 
-        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

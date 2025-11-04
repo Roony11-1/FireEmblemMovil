@@ -12,19 +12,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireEmblem">
+        <activity
+            android:name=".presentation.activity.PrincipalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activity.LoginActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.FireEmblem"
+            tools:ignore="DuplicateActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity
-        android:name=".presentation.activity.LoginActivity"
-        android:exported="true"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.FireEmblem"
-        tools:ignore="DuplicateActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 
-</application>
-
-    </manifest>
+</manifest>
