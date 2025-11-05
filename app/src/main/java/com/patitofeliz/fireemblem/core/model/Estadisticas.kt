@@ -10,4 +10,5 @@ class Estadisticas(
     var res: Int,
     var con: Int)
 {
+    fun clon() = Estadisticas(pv, fue, hab, vel, sue, def, res, con)
 }

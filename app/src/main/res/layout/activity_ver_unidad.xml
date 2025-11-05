@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.activity.VerUnidadActivity">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloVer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Selecciona la unidad para ver sus estadísticas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Contenedor que muestra el sprite y el piso -->
+
+    <!-- Spinner -->
+    <FrameLayout
+        android:id="@+id/flDisplayUnit"
+        android:layout_width="274dp"
+        android:layout_height="270dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoVerUnidad"
+        app:layout_constraintVertical_bias="0.5">
+
+        <!-- Piso -->
+        <ImageView
+            android:id="@+id/ivFloorVerUnidad"
+            android:layout_width="260dp"
+            android:layout_height="135dp"
+            android:layout_gravity="center|bottom"
+            android:src="@drawable/background" />
+
+        <!-- Sprite (más arriba y un poco a la izquierda) -->
+        <ImageView
+            android:id="@+id/ivVerUnidadSpriteIdle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginStart="-25dp"
+            android:layout_marginBottom="60dp"
+            android:src="@drawable/ic_launcher_background" />
+    </FrameLayout>
+
+
+    <!-- Información de la unidad -->
+
+    <Spinner
+        android:id="@+id/spVerUnidad"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tvInfoVerUnidad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTituloVer"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tvInfoVerUnidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Info (No deberías ver esto)"
+        app:layout_constraintBottom_toTopOf="@+id/flDisplayUnit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spVerUnidad"
+        app:layout_constraintVertical_bias="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

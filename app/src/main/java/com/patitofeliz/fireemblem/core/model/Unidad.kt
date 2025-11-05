@@ -11,6 +11,6 @@ class Unidad(var id: Int? = null,
     init
     {
         this.estadisticasBase = this.clase.estadisticasBase
-        this.estadisticasActuales = this.estadisticasBase
+        this.estadisticasActuales = this.estadisticasBase.clon()
     }
 }

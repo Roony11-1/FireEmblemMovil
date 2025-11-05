@@ -1,7 +1,9 @@
 package com.patitofeliz.fireemblem
 
 import android.content.Context
+import com.patitofeliz.fireemblem.core.controller.UnidadController
 import com.patitofeliz.fireemblem.core.interfaces.IClaseFactory
+import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadRepository
 import com.patitofeliz.fireemblem.core.services.UnidadService
@@ -27,6 +29,9 @@ object Manager
     lateinit var unidadService: UnidadService
         private set
 
+    lateinit var unidadController: IUnidadController
+        private set
+
     // Inicialización
     fun init(context: Context)
     {
@@ -35,5 +40,6 @@ object Manager
         unidadRepository = UnidadRepository()
         combateEngine = CombateEngine()
         unidadService = UnidadService(unidadRepository, combateEngine)
+        unidadController = UnidadController()
     }
 }

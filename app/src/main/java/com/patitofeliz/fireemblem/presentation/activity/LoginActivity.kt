@@ -1,5 +1,6 @@
 package com.patitofeliz.fireemblem.presentation.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +21,10 @@ class LoginActivity : AppCompatActivity()
         setContentView(binding.root)
 
         binding.btnInvitado.setOnClickListener {
+            val intent = Intent(this@LoginActivity, PrincipalActivity::class.java)
 
+            startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

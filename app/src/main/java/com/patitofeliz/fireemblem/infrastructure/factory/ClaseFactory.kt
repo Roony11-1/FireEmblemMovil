@@ -4,30 +4,29 @@ import android.content.Context
 import com.patitofeliz.fireemblem.core.interfaces.IClaseFactory
 import com.patitofeliz.fireemblem.core.model.clases.Clase
 import com.patitofeliz.fireemblem.core.model.clases.Mirmidon
+import com.patitofeliz.fireemblem.core.model.clases.Roy
 
 class ClaseFactory(private val context: Context?) : IClaseFactory
 {
-    private val clasesRegistradas = mutableMapOf<String, () -> Clase>()
+    private val clasesMap = mutableMapOf<String, () -> Clase>()
 
     init
     {
         registrarClase("Mirmidón") { Mirmidon() }
+        registrarClase("Lord (Roy)") { Roy() }
     }
 
     fun registrarClase(tipo: String, constructor: () -> Clase)
     {
-        clasesRegistradas[tipo] = constructor
+        clasesMap[tipo] = constructor
     }
 
-    override fun crearClase(tipo: String): Clase
+    override fun crearClase(tipo: String?): Clase
     {
-        val constructor = clasesRegistradas[tipo]
+        val constructor = clasesMap[tipo]
             ?: throw IllegalArgumentException("Tipo de clase desconocido: $tipo")
         return constructor()
     }
 
-    fun clasesRegistradas(): List<String>
-    {
-        return clasesRegistradas.keys.toList()
-    }
+    override fun clasesRegistradas(): List<String> = clasesMap.keys.toList()
 }
