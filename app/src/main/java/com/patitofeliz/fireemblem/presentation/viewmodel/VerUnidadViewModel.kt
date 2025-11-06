@@ -35,6 +35,8 @@ class VerUnidadViewModel : ViewModel()
         val mensaje = """
         Nombre: ${unidadSeleccionada.nombre}
         Clase: ${unidadSeleccionada.clase.nombreClase}
+        Nivel: ${unidadSeleccionada.nivel.nivel}
+        Experiencia: ${unidadSeleccionada.nivel.experiencia}
         PV: ${unidadSeleccionada.estadisticasBase.pv}
         Fuerza: ${unidadSeleccionada.estadisticasBase.fue}
         Habilidad: ${unidadSeleccionada.estadisticasBase.hab}

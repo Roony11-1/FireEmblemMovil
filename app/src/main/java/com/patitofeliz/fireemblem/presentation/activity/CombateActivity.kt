@@ -111,18 +111,31 @@ class CombateActivity : AppCompatActivity() {
                     if (frameIndex == atacante.clase.frameAtaque)
                     {
                         val golpe = combateEngine.calcularGolpe(atacante, defensor)
+                        val critChance = combateEngine.calcProbCritico(atacante, defensor)
                         Log.d("BATALLA", "Golpe calculado (Precision - Evasion): $golpe")
-                        if ((0..100).random() <= golpe.coerceAtMost(100))
+                        // siempre que sea critico golpeara(?
+                        if ((0..100).random() <= golpe.coerceAtMost(100) || (0..100).random() <= critChance.coerceAtMost(100))
                         {
                             // Golpe acertado
-                            val dmg = combateEngine.calcularDmg(atacante, defensor)
+                            var dmg = combateEngine.calcularDmg(atacante, defensor)
+
+                            // Critico
+                            if ((0..100).random() <= critChance.coerceAtMost(100))
+                            {
+                                dmg *= 3
+                                Log.d("BATALLA", "Golpe crítico! Daño: $dmg, PV defensor: ${defensor.estadisticasActuales.pv}")
+                                tvLog.append("${atacante.nombre} asesta un golpe crítico a ${defensor.nombre}! Daño: ${dmg}\n")
+                            }
+                            else
+                            {
+                                Log.d("BATALLA", "Golpe! Daño: $dmg, PV defensor: ${defensor.estadisticasActuales.pv}")
+                                tvLog.append("${atacante.nombre} asesta un golpe a ${defensor.nombre}! Daño: ${dmg}\n")
+                            }
                             combateEngine.aplicarDmg(defensor, dmg)
-                            Log.d("BATALLA", "Golpe acertado! Daño: $dmg, PV defensor: ${defensor.estadisticasActuales.pv}")
-                            tvLog.append("${atacante.nombre} golpea a ${defensor.nombre}! PV: ${defensor.estadisticasActuales.pv}\n")
                         }
                         else
                         {
-                            // Golpe fallado → animación de esquive del defensor
+                            // Golpe fallado animación de esquive del defensor
                             Log.d("BATALLA", "Golpe fallado!")
                             tvLog.append("${atacante.nombre} falla su ataque a ${defensor.nombre}!\n")
                             defensor.clase.animEsquive?.let { esquiveAnim ->
@@ -167,6 +180,7 @@ class CombateActivity : AppCompatActivity() {
                 }
 
                 turnoJugador = !turnoJugador
+                Log.d("BATALLA", "=== Fin Turno ===")
             }
 
             val ganador = if (combateEngine.estaVivo(jugador)) jugador else enemigo

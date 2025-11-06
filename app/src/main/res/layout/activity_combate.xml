@@ -15,7 +15,7 @@
         android:layout_marginBottom="196dp"
         android:scaleX="-1"
         android:src="@drawable/mirmidon_idle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvJugador"
         app:layout_constraintEnd_toStartOf="@+id/ivEnemigo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,23 +29,12 @@
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="196dp"
         android:src="@drawable/mirmidon_idle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvEnemigo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ivJugador"
         app:layout_constraintTop_toBottomOf="@+id/tvLog"
         app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/tvLog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#AA000000"
-        android:padding="8dp"
-        android:scrollbars="vertical"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvJugador"
@@ -69,6 +58,23 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tvJugador"
         app:layout_constraintTop_toBottomOf="@+id/ivEnemigo"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/tvLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#AA000000"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/ivJugador"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,13 +34,14 @@ class Mirmidon : Clase(nombreClase = "Mirmidon",
             R.drawable.mirmidon_dodge2
         )
     ),
-    estadisticasBase = Estadisticas(22, 6, 11, 11, 5, 5, 0, 5))
+    estadisticasBase = Estadisticas(22, 6, 11, 11, 5, 5, 0, 5),
+    estadisticasMaximas = Estadisticas(60, 60, 60, 60, 30, 60, 30, 0))
 {
     override var animAtaque: Animacion = Animacion(
         frames = sprite.spriteAtack,
         delays = listOf(131, 111, 78, 62, 99, 498, 69, 88, 113, 132, 104, 120),
         onFrame = null,
-        onComplete = { animAtaque.onUpdateDisplay?.invoke(sprite.spriteIdle) }
+        onComplete = null
     )
 
     override var frameAtaque: Int = 5

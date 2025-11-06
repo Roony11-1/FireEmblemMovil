@@ -20,16 +20,21 @@ class CombateEngine
         defensor.estadisticasActuales.pv = (defensor.estadisticasActuales.pv - dmg).coerceAtLeast(0)
     }
 
-    fun atacar(atacante: Unidad, defensor: Unidad)
+    // Tengo la logica directo en el activity mm la deberia mover?
+    /*fun atacar(atacante: Unidad, defensor: Unidad):String
     {
         var dmg = calcularDmg(atacante, defensor)
 
         val probCrit = calcProbCritico(atacante, defensor).coerceIn(0, 100)
         if ((0..100).random() <= probCrit)
+        {
             dmg *= 3
+            return "${atacante.nombre} ha hecho un golpe critico! Daño: ${dmg}"
+        }
 
         aplicarDmg(defensor, dmg)
-    }
+        return "${atacante.nombre} ataca! Daño: ${dmg}"
+    }*/
 
     fun calcularPrecision(atacante: Unidad): Int
     {

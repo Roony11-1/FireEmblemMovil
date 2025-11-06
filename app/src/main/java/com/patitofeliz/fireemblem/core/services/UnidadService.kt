@@ -22,8 +22,8 @@ class UnidadService(private val unidadRepository: IUnidadRepository,
         return unidadRepository.obtenerPorId(id)
     }
 
-    fun atacar(atacante: Unidad, defensor: Unidad)
+    /*fun atacar(atacante: Unidad, defensor: Unidad)
     {
         combateEngine.atacar(atacante, defensor)
-    }
+    }*/
 }

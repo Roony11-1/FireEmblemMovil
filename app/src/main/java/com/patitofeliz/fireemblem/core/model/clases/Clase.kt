@@ -12,8 +12,9 @@ abstract class Clase(
     var nombreClase: String,
     var arma: Arma,
     var sprite: Sprite,
-    var estadisticasBase: Estadisticas
-) {
+    var estadisticasBase: Estadisticas,
+    var estadisticasMaximas: Estadisticas)
+{
     open lateinit var animAtaque: Animacion
     open var frameAtaque: Int = 5
 
@@ -30,11 +31,7 @@ abstract class Clase(
         // Guardamos el callback original de onFrame si existiera
         val originalOnFrame = animAtaque.onFrame
 
-        animAtaque.onFrame = { frameIndex ->
-            originalOnFrame?.invoke(frameIndex) // llamamos al callback original si existía
-            if (frameIndex == frameAtaque)
-                combateEngine.atacar(atacante, defensor)
-        }
+        animAtaque.onFrame = null
 
         animAtaque.comenzar()
     }

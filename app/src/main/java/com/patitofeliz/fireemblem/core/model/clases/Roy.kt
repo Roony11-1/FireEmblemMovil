@@ -42,7 +42,8 @@ class Roy : Clase(nombreClase = "Lord (Roy)",
             R.drawable.roy_dodge2
         )
     ),
-    estadisticasBase = Estadisticas(18, 5, 5, 7, 7, 5, 0, 6))
+    estadisticasBase = Estadisticas(18, 5, 5, 7, 7, 5, 0, 6),
+    estadisticasMaximas = Estadisticas(60, 60, 60, 60, 30, 60, 30, 0))
 {
     override var animAtaque: Animacion = Animacion(
         frames = this.sprite.spriteAtack,
@@ -51,7 +52,7 @@ class Roy : Clase(nombreClase = "Lord (Roy)",
             120, 95, 110, 105, 100, 90, 85, 115, 120, 130, 140, 150
         ),
         onFrame = null,
-        onComplete = { animAtaque.onUpdateDisplay?.invoke(sprite.spriteIdle) }
+        onComplete = null
     )
 
     override var frameAtaque: Int = 5
