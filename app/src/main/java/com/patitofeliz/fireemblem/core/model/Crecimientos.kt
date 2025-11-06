@@ -1,13 +1,13 @@
 package com.patitofeliz.fireemblem.core.model
 
 class Crecimientos(
-    var pv: Int=500,
-    var fue: Int=500,
-    var hab: Int=500,
-    var vel: Int=500,
-    var sue: Int=500,
-    var def: Int=500,
-    var res: Int=500)
+    var pv: Int=0,
+    var fue: Int=0,
+    var hab: Int=0,
+    var vel: Int=0,
+    var sue: Int=0,
+    var def: Int=0,
+    var res: Int=0)
 {
     var crecimientos: Map<String, Int> = mapOf(
         "pv" to pv,

@@ -187,6 +187,7 @@ class CombateActivity : AppCompatActivity() {
             Log.d("BATALLA", "¡La batalla ha terminado! Ganador: ${ganador.nombre}")
             tvLog.text = ""
             tvLog.append("¡La batalla ha terminado! Ganador: ${ganador.nombre}\n")
+            ganador.agregarExperiencia(10)
         }
     }
 
