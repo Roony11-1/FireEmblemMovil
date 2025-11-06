@@ -16,7 +16,9 @@ abstract class Clase(
     var estadisticasMaximas: Estadisticas)
 {
     open lateinit var animAtaque: Animacion
+    open lateinit var animCritAtaque: Animacion
     open var frameAtaque: Int = 5
+    open var frameCritAtaque: Int = 5
 
     var animEsquive: Animacion = Animacion(
         frames = sprite.spriteDodge,

@@ -29,6 +29,40 @@ class Mirmidon : Clase(nombreClase = "Mirmidon",
             R.drawable.mirmidon_at11,
             R.drawable.mirmidon_at12
         ),
+        spriteCritAtack = listOf(
+            R.drawable.mirmidon_crit1,
+            R.drawable.mirmidon_crit2,
+            R.drawable.mirmidon_crit3,
+            R.drawable.mirmidon_crit4,
+            R.drawable.mirmidon_crit5,
+            R.drawable.mirmidon_crit6,
+            R.drawable.mirmidon_crit7,
+            R.drawable.mirmidon_crit8,
+            R.drawable.mirmidon_crit9,
+            R.drawable.mirmidon_crit10,
+            R.drawable.mirmidon_crit11,
+            R.drawable.mirmidon_crit12,
+            R.drawable.mirmidon_crit13,
+            R.drawable.mirmidon_crit14,
+            R.drawable.mirmidon_crit15,
+            R.drawable.mirmidon_crit16,
+            R.drawable.mirmidon_crit17,
+            R.drawable.mirmidon_crit18,
+            R.drawable.mirmidon_crit19,
+            R.drawable.mirmidon_crit20,
+            R.drawable.mirmidon_crit21,
+            R.drawable.mirmidon_crit22,
+            R.drawable.mirmidon_crit23,
+            R.drawable.mirmidon_crit24,
+            R.drawable.mirmidon_crit25,
+            R.drawable.mirmidon_at6,
+            R.drawable.mirmidon_at7,
+            R.drawable.mirmidon_at8,
+            R.drawable.mirmidon_at9,
+            R.drawable.mirmidon_at10,
+            R.drawable.mirmidon_at11,
+            R.drawable.mirmidon_at12
+        ),
         spriteDodge = listOf(
             R.drawable.mirmidon_dodge1,
             R.drawable.mirmidon_dodge2
@@ -44,5 +78,22 @@ class Mirmidon : Clase(nombreClase = "Mirmidon",
         onComplete = null
     )
 
+    override var animCritAtaque: Animacion = Animacion(
+        frames = sprite.spriteCritAtack,
+        delays = listOf(
+            50, 50, 50, 50, 50,   // 5
+            50,                    // 6
+            35, 35, 35, 50, 40,  // 11
+            45, 50, 45, 45, 50,     // 16
+            45, 50, 90, 80, 70,   // 21
+            100,                    // 22
+            70, 70, 70,  // 27
+            90, 85, 115, 120, 130, 140, 150
+        ),
+        onFrame = null,
+        onComplete = null
+    )
+
     override var frameAtaque: Int = 5
+    override var frameCritAtaque: Int = 25
 }

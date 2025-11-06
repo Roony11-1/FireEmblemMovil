@@ -37,6 +37,43 @@ class Roy : Clase(nombreClase = "Lord (Roy)",
             R.drawable.roy_at22,
             R.drawable.roy_at23
         ),
+        spriteCritAtack = listOf(
+            R.drawable.roy_crit1,
+            R.drawable.roy_crit2,
+            R.drawable.roy_crit3,
+            R.drawable.roy_crit4,
+            R.drawable.roy_crit5,
+            R.drawable.roy_crit6,
+            R.drawable.roy_crit7,
+            R.drawable.roy_crit8,
+            R.drawable.roy_crit9,
+            R.drawable.roy_crit10,
+            R.drawable.roy_crit11,
+            R.drawable.roy_crit12,
+            R.drawable.roy_crit13,
+            R.drawable.roy_crit14,
+            R.drawable.roy_crit15,
+            R.drawable.roy_crit16,
+            R.drawable.roy_crit17,
+            R.drawable.roy_crit18,
+            R.drawable.roy_crit19,
+            R.drawable.roy_crit20,
+            R.drawable.roy_at9,
+            R.drawable.roy_at10,
+            R.drawable.roy_at11,
+            R.drawable.roy_at12,
+            R.drawable.roy_at13,
+            R.drawable.roy_at14,
+            R.drawable.roy_at15,
+            R.drawable.roy_at16,
+            R.drawable.roy_at17,
+            R.drawable.roy_at18,
+            R.drawable.roy_at19,
+            R.drawable.roy_at20,
+            R.drawable.roy_at21,
+            R.drawable.roy_at22,
+            R.drawable.roy_at23
+        ),
         spriteDodge = listOf(
             R.drawable.roy_dodge1,
             R.drawable.roy_dodge2
@@ -55,5 +92,20 @@ class Roy : Clase(nombreClase = "Lord (Roy)",
         onComplete = null
     )
 
+    override var animCritAtaque: Animacion = Animacion(
+        frames = sprite.spriteCritAtack,
+        delays = listOf(
+            130, 110, 80, 60, 50,   // 5
+            500,                    // 6
+            70, 90, 110, 130, 160,  // 11
+            90, 80, 70, 60, 50,     // 16
+            120, 100, 90, 100, 113, 132, 104,
+            120, 95, 110, 105, 100, 90, 85, 115, 120, 130, 140, 150
+        ),
+        onFrame = null,
+        onComplete = null
+    )
+
     override var frameAtaque: Int = 5
+    override var frameCritAtaque: Int = 20
 }

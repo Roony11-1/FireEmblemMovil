@@ -49,9 +49,13 @@ class CombateActivity : AppCompatActivity() {
             }
 
             anim.onComplete = {
-                imageView.setImageResource(unidad.clase.sprite.spriteIdle)
-                if (cont.isActive)
-                    cont.resume(Unit) {}
+                // Lanza una corrutina en el hilo principal para poder usar delay
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(250)
+                    imageView.setImageResource(unidad.clase.sprite.spriteIdle)
+                    if (cont.isActive)
+                        cont.resume(Unit) {}
+                }
             }
 
             anim.comenzar()
@@ -99,6 +103,7 @@ class CombateActivity : AppCompatActivity() {
             // Función local para manejar el ataque
             suspend fun ejecutarAtaque(atacante: Unidad, defensor: Unidad)
             {
+                delay(500L)
                 val atacanteView = if (atacante == jugador) ivJugador else ivEnemigo
                 val defensorView = if (defensor == jugador) ivJugador else ivEnemigo
 
@@ -107,37 +112,47 @@ class CombateActivity : AppCompatActivity() {
                 Log.d("BATALLA", "${atacante.nombre} ataca a ${defensor.nombre}")
                 Log.d("BATALLA", "Precision: $precision, Evasion: $evasion")
 
-                atacante.clase.animAtaque.onFrame = { frameIndex ->
-                    if (frameIndex == atacante.clase.frameAtaque)
+                // Flag para saber si será crítico antes de animar
+                val critChance = combateEngine.calcProbCritico(atacante, defensor)
+                val golpe = combateEngine.calcularGolpe(atacante, defensor)
+                val esCritico = (0..100).random() <= critChance.coerceAtMost(100)
+                val aciertaGolpe = (0..100).random() <= golpe.coerceAtMost(100) || esCritico
+
+                // Seleccionar la animación según si es crítico o no
+                val animAtaqueSeleccionada = if (esCritico)
+                    atacante.clase.animCritAtaque
+                else
+                    atacante.clase.animAtaque
+
+                animAtaqueSeleccionada.onFrame = { frameIndex ->
+                    // Determina el frame del impacto según el tipo de ataque
+                    val frameImpacto = if (esCritico) atacante.clase.frameCritAtaque else atacante.clase.frameAtaque
+
+                    if (frameIndex == frameImpacto)
                     {
-                        val golpe = combateEngine.calcularGolpe(atacante, defensor)
-                        val critChance = combateEngine.calcProbCritico(atacante, defensor)
-                        Log.d("BATALLA", "Golpe calculado (Precision - Evasion): $golpe")
-                        // siempre que sea critico golpeara(?
-                        if ((0..100).random() <= golpe.coerceAtMost(100) || (0..100).random() <= critChance.coerceAtMost(100))
+                        if (aciertaGolpe)
                         {
-                            // Golpe acertado
                             var dmg = combateEngine.calcularDmg(atacante, defensor)
 
-                            // Critico
-                            if ((0..100).random() <= critChance.coerceAtMost(100))
+                            if (esCritico)
                             {
                                 dmg *= 3
                                 Log.d("BATALLA", "Golpe crítico! Daño: $dmg, PV defensor: ${defensor.estadisticasActuales.pv}")
-                                tvLog.append("${atacante.nombre} asesta un golpe crítico a ${defensor.nombre}! Daño: ${dmg}\n")
+                                tvLog.append("${atacante.nombre} asesta un golpe crítico a ${defensor.nombre}! Daño: $dmg\n")
                             }
                             else
                             {
                                 Log.d("BATALLA", "Golpe! Daño: $dmg, PV defensor: ${defensor.estadisticasActuales.pv}")
-                                tvLog.append("${atacante.nombre} asesta un golpe a ${defensor.nombre}! Daño: ${dmg}\n")
+                                tvLog.append("${atacante.nombre} asesta un golpe a ${defensor.nombre}! Daño: $dmg\n")
                             }
+
                             combateEngine.aplicarDmg(defensor, dmg)
                         }
                         else
                         {
-                            // Golpe fallado animación de esquive del defensor
                             Log.d("BATALLA", "Golpe fallado!")
                             tvLog.append("${atacante.nombre} falla su ataque a ${defensor.nombre}!\n")
+
                             defensor.clase.animEsquive?.let { esquiveAnim ->
                                 launch {
                                     playAnimacion(esquiveAnim, defensorView, defensor)
@@ -148,8 +163,9 @@ class CombateActivity : AppCompatActivity() {
                     }
                 }
 
-                // Ejecutar animación de ataque
-                playAnimacion(atacante.clase.animAtaque, atacanteView, atacante)
+
+                // Ejecutar animación seleccionada (ataque normal o crítico)
+                playAnimacion(animAtaqueSeleccionada, atacanteView, atacante)
             }
 
             // Bucle de batalla
