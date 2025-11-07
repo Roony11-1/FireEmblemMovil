@@ -4,6 +4,7 @@ import android.util.Log
 import com.patitofeliz.fireemblem.core.model.clases.Clase
 
 class Unidad(var id: Int? = null,
+             var idPropietario: Int? = null,
              var nombre: String,
              var nivel: SistemaNivel,
              var clase: Clase,

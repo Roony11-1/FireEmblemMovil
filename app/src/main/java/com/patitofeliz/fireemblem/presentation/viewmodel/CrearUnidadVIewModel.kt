@@ -43,6 +43,6 @@ class CrearUnidadVIewModel : ViewModel()
     private fun actualizarPreview()
     {
         if (claseSeleccionada != null)
-            _unidadPreview.value = Manager.unidadFactory.crearUnidad(0, nombreUnidad, claseSeleccionada!!)
+            _unidadPreview.value = Manager.unidadFactory.crearUnidad(0, null, nombreUnidad, claseSeleccionada!!)
     }
 }

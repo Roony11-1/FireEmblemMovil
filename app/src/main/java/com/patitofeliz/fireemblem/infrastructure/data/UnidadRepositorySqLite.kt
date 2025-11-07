@@ -55,7 +55,7 @@ class UnidadRepositorySqLite(context: Context)
             cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COL_CREDEF)),
             cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COL_CRERES))
         )
-        return Manager.unidadFactory.crearUnidad(id, nombre, clase, nivel, exp, crecimiento)
+        return Manager.unidadFactory.crearUnidad(id, null, nombre, clase, nivel, exp, crecimiento)
     }
 
     fun obtenerUnidades(): List<Unidad>
@@ -76,28 +76,23 @@ class UnidadRepositorySqLite(context: Context)
         return lista
     }
 
-    fun actualizarUnidad(
-        id: Int,
-        nombre: String,
-        clase: String,
-        niveles: SistemaNivel,
-        crecimiento: Crecimientos)
+    fun actualizarUnidad(unidad: Unidad)
     {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put(DBHelper.COL_NOMBRE, nombre)
-            put(DBHelper.COL_CLASE, clase)
-            put(DBHelper.COL_NIVEL, niveles.nivel)
-            put(DBHelper.COL_EXP, niveles.experiencia)
-            put(DBHelper.COL_CREPV, crecimiento.pv)
-            put(DBHelper.COL_CREFUE, crecimiento.fue)
-            put(DBHelper.COL_CREHAB, crecimiento.hab)
-            put(DBHelper.COL_CREVEL, crecimiento.vel)
-            put(DBHelper.COL_CRESUE, crecimiento.sue)
-            put(DBHelper.COL_CREDEF, crecimiento.def)
-            put(DBHelper.COL_CRERES, crecimiento.res)
+            put(DBHelper.COL_NOMBRE, unidad.nombre)
+            put(DBHelper.COL_CLASE, unidad.clase.nombreClase)
+            put(DBHelper.COL_NIVEL, unidad.nivel.nivel)
+            put(DBHelper.COL_EXP, unidad.nivel.experiencia)
+            put(DBHelper.COL_CREPV, unidad.crecimientos.pv)
+            put(DBHelper.COL_CREFUE, unidad.crecimientos.fue)
+            put(DBHelper.COL_CREHAB, unidad.crecimientos.hab)
+            put(DBHelper.COL_CREVEL, unidad.crecimientos.vel)
+            put(DBHelper.COL_CRESUE, unidad.crecimientos.sue)
+            put(DBHelper.COL_CREDEF, unidad.crecimientos.def)
+            put(DBHelper.COL_CRERES, unidad.crecimientos.res)
         }
-        db.update(DBHelper.PERSONAJES, values, "${DBHelper.COL_ID} = ?", arrayOf(id.toString()))
+        db.update(DBHelper.PERSONAJES, values, "${DBHelper.COL_ID} = ?", arrayOf(unidad.id.toString()))
         db.close()
     }
 

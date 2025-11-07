@@ -10,13 +10,15 @@ import com.patitofeliz.fireemblem.core.model.Unidad
 class UnidadFactory(private val claseFactory: IClaseFactory,
     private val crecimientoFactory: ICrecimientoFactory) : IUnidadFactory
 {
-    override fun crearUnidad(id: Int?, nombre: String, tipo: String?, nivel: Int, experiencia: Int, crecimiento: Crecimientos?): Unidad
+    override fun crearUnidad(id: Int?, idPropietario:Int?, nombre: String, tipo: String?, nivel: Int, experiencia: Int, crecimiento: Crecimientos?): Unidad
     {
         val clase = claseFactory.crearClase(tipo)
         var crecimientoAsignado: Crecimientos? = crecimiento
         if (crecimientoAsignado == null)
             crecimientoAsignado = crecimientoFactory.generarCrecimientos(tipo)
-        return Unidad(id = id, nombre = nombre,
+        return Unidad(id = id,
+            idPropietario = idPropietario,
+            nombre = nombre,
             nivel = SistemaNivel(nivel, experiencia),
             crecimientos = crecimientoAsignado,
             clase = clase)

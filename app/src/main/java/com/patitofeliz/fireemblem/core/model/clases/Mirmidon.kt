@@ -1,14 +1,11 @@
 package com.patitofeliz.fireemblem.core.model.clases
 
 import Animacion
-import android.util.Log
 import com.patitofeliz.fireemblem.core.model.Estadisticas
 import com.patitofeliz.fireemblem.core.model.Sprite
 
 import com.patitofeliz.fireemblem.R
-import com.patitofeliz.fireemblem.core.model.Unidad
 import com.patitofeliz.fireemblem.core.model.armas.Espada
-import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 
 class Mirmidon : Clase(nombreClase = "Mirmidón",
     arma = Espada(),

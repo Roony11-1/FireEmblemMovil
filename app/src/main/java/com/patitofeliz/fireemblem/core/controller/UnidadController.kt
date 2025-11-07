@@ -1,8 +1,17 @@
 package com.patitofeliz.fireemblem.core.controller
 
+import android.util.Log
+import android.widget.Toast
 import com.patitofeliz.fireemblem.Manager
+import com.patitofeliz.fireemblem.config.RetroFitClient
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
+import com.patitofeliz.fireemblem.core.model.Crecimientos
 import com.patitofeliz.fireemblem.core.model.Unidad
+import com.patitofeliz.fireemblem.core.model.api.ResponseApi
+import com.patitofeliz.fireemblem.core.model.api.UnidadApi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UnidadController : IUnidadController
 {
@@ -19,17 +28,76 @@ class UnidadController : IUnidadController
         if (unidadExistente != null)
             return "Ya existe una unidad con el nombre ${nombre}"
 
-        val unidad = Manager.unidadFactory.crearUnidad(null, nombre, tipoClase)
+        val unidad = Manager.unidadFactory.crearUnidad(null, null,nombre, tipoClase)
 
         unidades.add(unidad)
-        Manager.unidadRepositorySqLite.agregarUnidad(unidad)
+
+        if (!Manager.loginService.isLogged)
+            Manager.unidadRepositorySqLite.agregarUnidad(unidad)
+        else
+            saveOnApi(unidad)
 
         return "Alistaste a ${nombre} - Clase: ${tipoClase}"
+    }
+
+    private fun saveOnApi(unidad: Unidad)
+    {
+        val unidadApi = UnidadApi(
+            unidad.id ?: 0,
+            Manager.loginService.idLogin!!,
+            unidad.nombre,
+            unidad.clase.nombreClase,
+            unidad.nivel.nivel,
+            unidad.nivel.experiencia,
+            unidad.crecimientos.pv,
+            unidad.crecimientos.fue,
+            unidad.crecimientos.hab,
+            unidad.crecimientos.vel,
+            unidad.crecimientos.sue,
+            unidad.crecimientos.def,
+            unidad.crecimientos.res
+        )
+
+        RetroFitClient.unidadService.saveUnit(unidadApi)
+            .enqueue(object : Callback<ResponseApi<UnidadApi>> {
+                override fun onResponse(
+                    call: Call<ResponseApi<UnidadApi>>,
+                    response: Response<ResponseApi<UnidadApi>>
+                ) {
+                    if (response.isSuccessful)
+                        Log.d("GUARDAR API", "GUARDAMOS")
+                    else
+                        Log.d("GUARDAR API", "NO GUARDAMOS")
+                }
+
+                override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
+                    Log.d("GUARDAR API", "ERROR AL GUARDAR")
+                }
+            })
     }
 
     override fun agregarUnidadDB(unidad: Unidad)
     {
         unidades.add(unidad)
+    }
+
+    override fun agregarUnidadApi(unidadApi: UnidadApi)
+    {
+        val unidadFromApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
+            unidadApi.idPropietario,
+            unidadApi.nombre,
+            unidadApi.clase,
+            unidadApi.nivel,
+            unidadApi.experiencia,
+            Crecimientos(unidadApi.crePv,
+                unidadApi.creFue,
+                unidadApi.creHab,
+                unidadApi.creVel,
+                unidadApi.creSue,
+                unidadApi.creDef,
+                unidadApi.creRes))
+
+        unidades.add(unidadFromApi)
     }
 
     override fun eliminarUnidadid(id: Int): Boolean
@@ -54,4 +122,18 @@ class UnidadController : IUnidadController
     }
 
     override fun obtenerUnidades(): List<Unidad> = unidades.toList()
+
+    override fun actualizarUnidad(unidad: Unidad): Boolean
+    {
+        val index = unidades.indexOfFirst { it.id == unidad.id }
+        return if (index != -1)
+        {
+            unidades[index] = unidad
+
+            Manager.unidadRepositorySqLite.actualizarUnidad(unidad)
+            true
+        }
+        else
+            false
+    }
 }

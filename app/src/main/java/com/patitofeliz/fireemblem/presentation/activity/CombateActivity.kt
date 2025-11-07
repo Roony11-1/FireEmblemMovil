@@ -6,13 +6,20 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.patitofeliz.fireemblem.Manager
-import com.patitofeliz.fireemblem.R
+import com.patitofeliz.fireemblem.Manager.unidadController
+import com.patitofeliz.fireemblem.config.RetroFitClient
+import com.patitofeliz.fireemblem.core.model.Crecimientos
 import com.patitofeliz.fireemblem.core.model.Unidad
-import com.patitofeliz.fireemblem.core.usecase.CombateEngine
+import com.patitofeliz.fireemblem.core.model.api.ResponseApi
+import com.patitofeliz.fireemblem.core.model.api.UnidadApi
 import com.patitofeliz.fireemblem.databinding.ActivityCombateBinding
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CombateActivity : AppCompatActivity() {
 
@@ -23,7 +30,6 @@ class CombateActivity : AppCompatActivity() {
     private lateinit var tvEnemigo: TextView
 
     private lateinit var binding: ActivityCombateBinding
-
     private val combateEngine = Manager.combateEngine
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,8 +96,8 @@ class CombateActivity : AppCompatActivity() {
         val clases: List<String> = Manager.claseFactory.clasesRegistradas()
         val claseAleatoria = clases.random()
         val nivelJugador: Int = jugador.nivel.nivel
-        val aleatorizadorNivel: Int = (-1..1).random()
-        val enemigo: Unidad = Manager.unidadFactory.crearUnidad(-1, "Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel))
+        val aleatorizadorNivel: Int = (-2..3).random()
+        val enemigo: Unidad = Manager.unidadFactory.crearUnidad(-1, null,"Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel).coerceAtLeast(1))
 
         // Reiniciar PV
         jugador.estadisticasActuales.pv = jugador.estadisticasBase.pv
@@ -203,10 +209,21 @@ class CombateActivity : AppCompatActivity() {
             }
 
             val ganador = if (combateEngine.estaVivo(jugador)) jugador else enemigo
+            val perdedor = if (ganador == jugador) enemigo else jugador
             Log.d("BATALLA", "¡La batalla ha terminado! Ganador: ${ganador.nombre}")
             tvLog.text = ""
             tvLog.append("¡La batalla ha terminado! Ganador: ${ganador.nombre}\n")
+
             ganador.agregarExperiencia(75)
+            perdedor.agregarExperiencia(10)
+
+            val unidadActualizar = if (ganador == jugador) ganador else perdedor
+
+            if (Manager.loginService.isLogged)
+                updateWithApi(unidadActualizar)
+            else
+                Manager.unidadController.actualizarUnidad(unidadActualizar)
+
             delay(1500)
             val intent = Intent(this@CombateActivity, PrepararCombateActivity::class.java)
             startActivity(intent)
@@ -214,7 +231,41 @@ class CombateActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateWithApi(unidad: Unidad)
+    {
+        val unidadApi = UnidadApi(
+            unidad.id ?: 0,
+            unidad.idPropietario ?: 0,
+            unidad.nombre,
+            unidad.clase.nombreClase,
+            unidad.nivel.nivel,
+            unidad.nivel.experiencia,
+            unidad.crecimientos.pv,
+            unidad.crecimientos.fue,
+            unidad.crecimientos.hab,
+            unidad.crecimientos.vel,
+            unidad.crecimientos.sue,
+            unidad.crecimientos.def,
+            unidad.crecimientos.res
+        )
 
+        RetroFitClient.unidadService.updateUnit(unidadApi)
+            .enqueue(object : Callback<ResponseApi<UnidadApi>> {
+                override fun onResponse(
+                    call: Call<ResponseApi<UnidadApi>>,
+                    response: retrofit2.Response<ResponseApi<UnidadApi>>
+                ) {
+                    if (response.isSuccessful)
+                        Toast.makeText(this@CombateActivity, "Unidad actualizada", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(this@CombateActivity, "Error al actualizar unidad", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
+                    Toast.makeText(this@CombateActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
 
 
 }

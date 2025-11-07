@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -61,6 +62,18 @@ class PrepararCombateActivity : AppCompatActivity()
             intent.putExtra("nombreUnidad", unidadSeleccionadaNombre)
             startActivity(intent)
             finish()
+        }
+
+        binding.btnEnLinea.setOnClickListener {
+            if (!Manager.loginService.isLogged)
+                Toast.makeText(this, "Solo se puede con una sesión activa!", Toast.LENGTH_SHORT).show()
+            else
+            {
+                val intent = Intent(this@PrepararCombateActivity, CombateActivity::class.java)
+                intent.putExtra("nombreUnidad", unidadSeleccionadaNombre)
+                startActivity(intent)
+                finish()
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

@@ -3,19 +3,26 @@ package com.patitofeliz.fireemblem.presentation.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.patitofeliz.fireemblem.Manager
 import com.patitofeliz.fireemblem.Manager.unidadController
 import com.patitofeliz.fireemblem.Manager.unidadRepositorySqLite
 import com.patitofeliz.fireemblem.R
+import com.patitofeliz.fireemblem.config.RetroFitClient
 import com.patitofeliz.fireemblem.core.model.Unidad
+import com.patitofeliz.fireemblem.core.model.api.UnidadApi
 import com.patitofeliz.fireemblem.core.view.ArrayAdapterFactory
 import com.patitofeliz.fireemblem.databinding.ActivityPrincipalBinding
 import com.patitofeliz.fireemblem.helper.DBHelper
 import com.patitofeliz.fireemblem.presentation.viewmodel.PrincipalViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class PrincipalActivity : AppCompatActivity()
 {
@@ -37,11 +44,42 @@ class PrincipalActivity : AppCompatActivity()
         /*val context: Context = this // tu context
         context.deleteDatabase(DBHelper.DATABASE_NAME*/
 
-        val unidadesSqLite: List<Unidad> = unidadRepositorySqLite.obtenerUnidades()
-
-        for (unidad in unidadesSqLite)
+        if (Manager.loginService.isLogged)
         {
-            unidadController.agregarUnidadDB(unidad)
+            RetroFitClient.unidadService.findMyUnits(Manager.loginService.idLogin!!)
+                .enqueue(object : Callback<List<UnidadApi>> {
+                    override fun onResponse(
+                        call: Call<List<UnidadApi>>,
+                        response: Response<List<UnidadApi>>)
+                    {
+                        if (response.isSuccessful)
+                        {
+                            val lista = response.body()
+                            Log.d("APIUnidad", "Lista: ${lista?.size}")
+                            if (!lista.isNullOrEmpty())
+                            {
+                                lista.forEach { unidad ->
+                                    Log.d("APIUnidad", "Lista: ${lista?.size} - Unidad: ${unidad.nombre}")
+                                    unidadController.agregarUnidadApi(unidad)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
+                    {
+                        t.printStackTrace()
+                    }
+                })
+        }
+        else
+        {
+            val unidadesSqLite: List<Unidad> = unidadRepositorySqLite.obtenerUnidades()
+
+            for (unidad in unidadesSqLite)
+            {
+                unidadController.agregarUnidadDB(unidad)
+            }
         }
 
         val menuAcciones = mapOf(

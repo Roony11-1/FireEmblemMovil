@@ -7,7 +7,7 @@ import com.patitofeliz.fireemblem.core.interfaces.ICrecimientoFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadRepository
-import com.patitofeliz.fireemblem.core.model.Unidad
+import com.patitofeliz.fireemblem.core.services.LoginService
 import com.patitofeliz.fireemblem.core.services.UnidadService
 import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 import com.patitofeliz.fireemblem.infrastructure.data.UnidadRepository
@@ -39,6 +39,8 @@ object Manager
 
     lateinit var unidadRepositorySqLite: UnidadRepositorySqLite
 
+    lateinit var loginService: LoginService
+
     // Inicialización
     fun init(context: Context)
     {
@@ -51,5 +53,7 @@ object Manager
         unidadController = UnidadController()
 
         unidadRepositorySqLite = UnidadRepositorySqLite(context)
+
+        loginService = LoginService()
     }
 }

@@ -1,7 +1,6 @@
 package com.patitofeliz.fireemblem.core.model.clases
 
 import Animacion
-import android.util.Log
 import com.patitofeliz.fireemblem.R
 import com.patitofeliz.fireemblem.core.model.Estadisticas
 import com.patitofeliz.fireemblem.core.model.Sprite

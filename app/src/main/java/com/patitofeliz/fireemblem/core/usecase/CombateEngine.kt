@@ -1,16 +1,14 @@
 package com.patitofeliz.fireemblem.core.usecase
 
-import android.util.Log
 import com.patitofeliz.fireemblem.core.model.Unidad
-import kotlinx.coroutines.*
 
 class CombateEngine
 {
 
     fun calcularDmg(atacante: Unidad, defensor: Unidad): Int
     {
-        val fuerzaAtacante = atacante.estadisticasActuales.fue
-        val defensaDefensor = defensor.estadisticasActuales.def
+        val fuerzaAtacante = atacante.estadisticasBase.fue
+        val defensaDefensor = defensor.estadisticasBase.def
         val potenciaArma = atacante.clase.arma.potencia
         return ((fuerzaAtacante + potenciaArma) - defensaDefensor).coerceAtLeast(0)
     }
@@ -38,7 +36,7 @@ class CombateEngine
 
     fun calcularPrecision(atacante: Unidad): Int
     {
-        return (atacante.estadisticasActuales.hab * 2) + (atacante.estadisticasActuales.sue / 2) +
+        return (atacante.estadisticasBase.hab * 2) + (atacante.estadisticasBase.sue / 2) +
                 atacante.clase.arma.golpe
     }
 
@@ -49,7 +47,7 @@ class CombateEngine
 
     fun velocidadAtaque(unidad: Unidad): Int
     {
-        return unidad.estadisticasActuales.vel - (unidad.clase.arma.peso - unidad.estadisticasActuales.con)
+        return unidad.estadisticasBase.vel - (unidad.clase.arma.peso - unidad.estadisticasBase.con)
     }
 
     fun calcularGolpe(atacante: Unidad, defensor: Unidad): Int
@@ -64,12 +62,12 @@ class CombateEngine
 
     fun calcularHacerCritico(atacante: Unidad): Int
     {
-        return (atacante.estadisticasActuales.hab/2) + (atacante.clase.arma.critico)
+        return (atacante.estadisticasBase.hab/2) + (atacante.clase.arma.critico)
     }
 
     fun calcularDodgeCritico(defensor: Unidad): Int
     {
-        return defensor.estadisticasActuales.sue
+        return defensor.estadisticasBase.sue
     }
 
     fun calcProbCritico(atacante: Unidad, defensor: Unidad): Int
