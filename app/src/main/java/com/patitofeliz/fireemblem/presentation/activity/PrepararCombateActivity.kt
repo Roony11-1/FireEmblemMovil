@@ -60,6 +60,7 @@ class PrepararCombateActivity : AppCompatActivity()
             val intent = Intent(this@PrepararCombateActivity, CombateActivity::class.java)
             intent.putExtra("nombreUnidad", unidadSeleccionadaNombre)
             startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

@@ -10,7 +10,7 @@ import com.patitofeliz.fireemblem.core.model.Unidad
 import com.patitofeliz.fireemblem.core.model.armas.Espada
 import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 
-class Mirmidon : Clase(nombreClase = "Mirmidon",
+class Mirmidon : Clase(nombreClase = "Mirmidón",
     arma = Espada(),
     sprite = Sprite(
         spriteScreen = R.drawable.mirmidon_screen,
@@ -81,14 +81,13 @@ class Mirmidon : Clase(nombreClase = "Mirmidon",
     override var animCritAtaque: Animacion = Animacion(
         frames = sprite.spriteCritAtack,
         delays = listOf(
-            50, 50, 50, 50, 50,   // 5
-            50,                    // 6
-            35, 35, 35, 50, 40,  // 11
-            45, 50, 45, 45, 50,     // 16
-            45, 50, 90, 80, 70,   // 21
-            100,                    // 22
-            70, 70, 70,  // 27
-            90, 85, 115, 120, 130, 140, 150
+            50, 50, 50, 50, 50,
+            50, 35, 35, 35, 50,
+            40, 45, 50, 45, 45,
+            50, 45, 50, 90, 80,
+            70, 100, 70, 70, 70,
+            498, 69, 88, 113, 132,
+            104, 120, 128
         ),
         onFrame = null,
         onComplete = null

@@ -3,19 +3,24 @@ package com.patitofeliz.fireemblem
 import android.content.Context
 import com.patitofeliz.fireemblem.core.controller.UnidadController
 import com.patitofeliz.fireemblem.core.interfaces.IClaseFactory
+import com.patitofeliz.fireemblem.core.interfaces.ICrecimientoFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadRepository
+import com.patitofeliz.fireemblem.core.model.Unidad
 import com.patitofeliz.fireemblem.core.services.UnidadService
 import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 import com.patitofeliz.fireemblem.infrastructure.data.UnidadRepository
+import com.patitofeliz.fireemblem.infrastructure.data.UnidadRepositorySqLite
 import com.patitofeliz.fireemblem.infrastructure.factory.ClaseFactory
+import com.patitofeliz.fireemblem.infrastructure.factory.CrecimientoFactory
 import com.patitofeliz.fireemblem.infrastructure.factory.UnidadFactory
 
 object Manager
 {
     lateinit var claseFactory: IClaseFactory
         private set
+    lateinit var crecimientoFactory: ICrecimientoFactory
     lateinit var unidadFactory: IUnidadFactory
         private set
 
@@ -32,14 +37,19 @@ object Manager
     lateinit var unidadController: IUnidadController
         private set
 
+    lateinit var unidadRepositorySqLite: UnidadRepositorySqLite
+
     // Inicialización
     fun init(context: Context)
     {
-        claseFactory = ClaseFactory(context)
-        unidadFactory = UnidadFactory(claseFactory)
+        claseFactory = ClaseFactory()
+        crecimientoFactory = CrecimientoFactory()
+        unidadFactory = UnidadFactory(claseFactory, crecimientoFactory)
         unidadRepository = UnidadRepository()
         combateEngine = CombateEngine()
         unidadService = UnidadService(unidadRepository, combateEngine)
         unidadController = UnidadController()
+
+        unidadRepositorySqLite = UnidadRepositorySqLite(context)
     }
 }

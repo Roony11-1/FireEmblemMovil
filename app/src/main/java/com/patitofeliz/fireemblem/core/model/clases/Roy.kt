@@ -95,12 +95,13 @@ class Roy : Clase(nombreClase = "Lord (Roy)",
     override var animCritAtaque: Animacion = Animacion(
         frames = sprite.spriteCritAtack,
         delays = listOf(
-            130, 110, 80, 60, 50,   // 5
-            500,                    // 6
-            70, 90, 110, 130, 160,  // 11
-            90, 80, 70, 60, 50,     // 16
-            120, 100, 90, 100, 113, 132, 104,
-            120, 95, 110, 105, 100, 90, 85, 115, 120, 130, 140, 150
+            130, 110, 80, 60, 50,
+            500, 70, 90, 110, 130,
+            160, 90, 80, 70, 60,
+            50, 120, 100, 90, 100,
+            113, 132, 104, 120, 95,
+            110, 105, 100, 90, 85,
+            115, 120, 130, 140, 150, 150
         ),
         onFrame = null,
         onComplete = null

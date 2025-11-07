@@ -8,9 +8,12 @@ class SistemaNivel(var nivel:Int = 1, var experiencia:Int = 0)
         return this.subirNivel()
     }
 
-    private fun subirNivel():Boolean
+    private fun subirNivel(): Boolean
     {
-        if (this.nivel <= 20)
+        if (this.nivel >= 20)
+            return false
+
+        if (this.experiencia >= 100)
         {
             this.experiencia -= 100
             this.nivel++

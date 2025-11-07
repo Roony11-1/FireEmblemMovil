@@ -1,6 +1,7 @@
 package com.patitofeliz.fireemblem.presentation.activity
 
 import Animacion
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -88,7 +89,9 @@ class CombateActivity : AppCompatActivity() {
         val jugador: Unidad = Manager.unidadController.obtenerUnidadNombre(nombre)!!
         val clases: List<String> = Manager.claseFactory.clasesRegistradas()
         val claseAleatoria = clases.random()
-        val enemigo: Unidad = Manager.unidadFactory.crearUnidad(-1, "Enemigo", claseAleatoria)
+        val nivelJugador: Int = jugador.nivel.nivel
+        val aleatorizadorNivel: Int = (-1..1).random()
+        val enemigo: Unidad = Manager.unidadFactory.crearUnidad(-1, "Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel))
 
         // Reiniciar PV
         jugador.estadisticasActuales.pv = jugador.estadisticasBase.pv
@@ -203,7 +206,11 @@ class CombateActivity : AppCompatActivity() {
             Log.d("BATALLA", "¡La batalla ha terminado! Ganador: ${ganador.nombre}")
             tvLog.text = ""
             tvLog.append("¡La batalla ha terminado! Ganador: ${ganador.nombre}\n")
-            ganador.agregarExperiencia(10)
+            ganador.agregarExperiencia(75)
+            delay(1500)
+            val intent = Intent(this@CombateActivity, PrepararCombateActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

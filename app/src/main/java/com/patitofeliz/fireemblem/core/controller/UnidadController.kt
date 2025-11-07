@@ -19,11 +19,17 @@ class UnidadController : IUnidadController
         if (unidadExistente != null)
             return "Ya existe una unidad con el nombre ${nombre}"
 
-        val unidad = Manager.unidadFactory.crearUnidad(nextId++, nombre, tipoClase)
+        val unidad = Manager.unidadFactory.crearUnidad(null, nombre, tipoClase)
 
         unidades.add(unidad)
+        Manager.unidadRepositorySqLite.agregarUnidad(unidad)
 
         return "Alistaste a ${nombre} - Clase: ${tipoClase}"
+    }
+
+    override fun agregarUnidadDB(unidad: Unidad)
+    {
+        unidades.add(unidad)
     }
 
     override fun eliminarUnidadid(id: Int): Boolean

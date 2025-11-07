@@ -37,13 +37,13 @@ class VerUnidadViewModel : ViewModel()
         Clase: ${unidadSeleccionada.clase.nombreClase}
         Nivel: ${unidadSeleccionada.nivel.nivel}
         Experiencia: ${unidadSeleccionada.nivel.experiencia}
-        PV: ${unidadSeleccionada.estadisticasBase.pv}
-        Fuerza: ${unidadSeleccionada.estadisticasBase.fue}
-        Habilidad: ${unidadSeleccionada.estadisticasBase.hab}
-        Velocidad: ${unidadSeleccionada.estadisticasBase.vel}
-        Defensa: ${unidadSeleccionada.estadisticasBase.def}
-        Resistencia: ${unidadSeleccionada.estadisticasBase.res}
-        Suerte: ${unidadSeleccionada.estadisticasBase.sue}
+        PV: ${unidadSeleccionada.estadisticasBase.pv} - Crecimiento: ${unidadSeleccionada.crecimientos.pv}
+        Fuerza: ${unidadSeleccionada.estadisticasBase.fue} - Crecimiento: ${unidadSeleccionada.crecimientos.fue}
+        Habilidad: ${unidadSeleccionada.estadisticasBase.hab} - Crecimiento: ${unidadSeleccionada.crecimientos.hab}
+        Velocidad: ${unidadSeleccionada.estadisticasBase.vel} - Crecimiento: ${unidadSeleccionada.crecimientos.vel}
+        Defensa: ${unidadSeleccionada.estadisticasBase.def} - Crecimiento: ${unidadSeleccionada.crecimientos.def}
+        Resistencia: ${unidadSeleccionada.estadisticasBase.res} - Crecimiento: ${unidadSeleccionada.crecimientos.res}
+        Suerte: ${unidadSeleccionada.estadisticasBase.sue} - Crecimiento: ${unidadSeleccionada.crecimientos.sue}
         Constitución: ${unidadSeleccionada.estadisticasBase.con}
     """.trimIndent()
 
