@@ -33,8 +33,6 @@ class VerUnidadViewModel : ViewModel()
             return "Info (No deberias ver esto)"
 
         val mensaje = """
-        Id: ${unidadSeleccionada.id}
-        Id Propietario: ${unidadSeleccionada.idPropietario}
         Nombre: ${unidadSeleccionada.nombre}
         Clase: ${unidadSeleccionada.clase.nombreClase}
         Nivel: ${unidadSeleccionada.nivel.nivel}

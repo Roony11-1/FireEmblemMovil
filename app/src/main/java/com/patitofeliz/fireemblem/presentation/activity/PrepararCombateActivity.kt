@@ -60,6 +60,7 @@ class PrepararCombateActivity : AppCompatActivity()
         binding.btnIrBatalla.setOnClickListener {
             val intent = Intent(this@PrepararCombateActivity, CombateActivity::class.java)
             intent.putExtra("nombreUnidad", unidadSeleccionadaNombre)
+            intent.putExtra("modo", "offLine")
             startActivity(intent)
             finish()
         }
@@ -71,6 +72,7 @@ class PrepararCombateActivity : AppCompatActivity()
             {
                 val intent = Intent(this@PrepararCombateActivity, CombateActivity::class.java)
                 intent.putExtra("nombreUnidad", unidadSeleccionadaNombre)
+                intent.putExtra("modo", "onLine")
                 startActivity(intent)
                 finish()
             }

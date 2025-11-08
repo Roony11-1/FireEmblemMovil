@@ -29,10 +29,14 @@ class CombateActivity : AppCompatActivity() {
     private lateinit var tvJugador: TextView
     private lateinit var tvEnemigo: TextView
 
+    private lateinit var enemigoApi: Unidad
+    private lateinit var modo: String
+
     private lateinit var binding: ActivityCombateBinding
     private val combateEngine = Manager.combateEngine
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityCombateBinding.inflate(layoutInflater)
@@ -44,8 +48,45 @@ class CombateActivity : AppCompatActivity() {
         tvJugador = binding.tvJugador
         tvEnemigo = binding.tvEnemigo
 
-        val nombreUnidad = intent.getStringExtra("nombreUnidad")
-        iniciarBatalla(nombreUnidad!!)
+        RetroFitClient.unidadService.findOtherUnits(Manager.loginService.idLogin!!)
+            .enqueue(object : Callback<List<UnidadApi>> {
+                override fun onResponse(
+                    call: Call<List<UnidadApi>>,
+                    response: Response<List<UnidadApi>>)
+                {
+                    if (response.isSuccessful)
+                    {
+                        val lista = response.body()
+                        Log.d("APIUnidad", "Lista: ${lista?.size}")
+                        if (!lista.isNullOrEmpty())
+                        {
+                            val unidadApi = lista.random()
+                            enemigoApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
+                                unidadApi.idPropietario,
+                                unidadApi.nombre,
+                                unidadApi.clase,
+                                unidadApi.nivel,
+                                unidadApi.experiencia,
+                                Crecimientos(unidadApi.crePv,
+                                    unidadApi.creFue,
+                                    unidadApi.creHab,
+                                    unidadApi.creVel,
+                                    unidadApi.creSue,
+                                    unidadApi.creDef,
+                                    unidadApi.creRes))
+
+                                val nombreUnidad = intent.getStringExtra("nombreUnidad")!!
+                                modo = intent.getStringExtra("modo") ?: "offLine"
+                                iniciarBatalla(nombreUnidad)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
+                {
+                    t.printStackTrace()
+                }
+            })
     }
 
     private suspend fun playAnimacion(anim: Animacion, imageView: ImageView, unidad: Unidad) =
@@ -93,11 +134,17 @@ class CombateActivity : AppCompatActivity() {
     private fun iniciarBatalla(nombre: String)
     {
         val jugador: Unidad = Manager.unidadController.obtenerUnidadNombre(nombre)!!
-        val clases: List<String> = Manager.claseFactory.clasesRegistradas()
-        val claseAleatoria = clases.random()
-        val nivelJugador: Int = jugador.nivel.nivel
-        val aleatorizadorNivel: Int = (-2..3).random()
-        val enemigo: Unidad = Manager.unidadFactory.crearUnidad(-1, null,"Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel).coerceAtLeast(1))
+        var enemigo: Unidad
+        if (modo.equals("onLine"))
+            enemigo = enemigoApi
+        else
+        {
+            val clases: List<String> = Manager.claseFactory.clasesRegistradas()
+            val claseAleatoria = clases.random()
+            val nivelJugador: Int = jugador.nivel.nivel
+            val aleatorizadorNivel: Int = (-2..3).random()
+            enemigo = Manager.unidadFactory.crearUnidad(-1, null,"Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel).coerceAtLeast(1))
+        }
 
         // Reiniciar PV
         jugador.estadisticasActuales.pv = jugador.estadisticasBase.pv

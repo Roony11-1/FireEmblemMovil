@@ -85,7 +85,8 @@ class PrincipalActivity : AppCompatActivity()
         val menuAcciones = mapOf(
             "Crear Unidad" to { irCrearUnidad() },
             "Ver Unidades" to { irVerUnidades() },
-            "Combate" to { irCombate() }
+            "Combate" to { irCombate() },
+            "Salir" to { salir() }
         )
 
         binding.lvPrincipal.setOnItemClickListener { parent, view, position, id ->
@@ -103,6 +104,8 @@ class PrincipalActivity : AppCompatActivity()
 
     private fun irCrearUnidad()
     {
+        if (unidadController.obtenerUnidades().size == 0)
+            return
         val intent = Intent(this, CrearUnidadActivity::class.java)
 
         startActivity(intent)
@@ -110,6 +113,8 @@ class PrincipalActivity : AppCompatActivity()
 
     private fun irVerUnidades()
     {
+        if (unidadController.obtenerUnidades().size == 0)
+            return
         val intent = Intent(this, VerUnidadActivity::class.java)
 
         startActivity(intent)
@@ -117,8 +122,18 @@ class PrincipalActivity : AppCompatActivity()
 
     private fun irCombate()
     {
+        if (unidadController.obtenerUnidades().size == 0)
+            return
         val intent = Intent(this, PrepararCombateActivity::class.java)
 
         startActivity(intent)
+    }
+
+    private fun salir()
+    {
+        val intent = Intent(this, LoginActivity::class.java)
+        unidadController.limpiar()
+        startActivity(intent)
+        finish()
     }
 }
