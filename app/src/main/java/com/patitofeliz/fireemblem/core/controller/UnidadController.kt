@@ -40,9 +40,9 @@ class UnidadController : IUnidadController
         return "Alistaste a ${nombre} - Clase: ${tipoClase}"
     }
 
-    private fun saveOnApi(unidad: Unidad)
+    private fun modelToApiModel(unidad: Unidad): UnidadApi
     {
-        val unidadApi = UnidadApi(
+        return UnidadApi(
             unidad.id ?: 0,
             Manager.loginService.idLogin!!,
             unidad.nombre,
@@ -57,6 +57,28 @@ class UnidadController : IUnidadController
             unidad.crecimientos.def,
             unidad.crecimientos.res
         )
+    }
+
+    private fun apiModeltoModel(unidadApi: UnidadApi):Unidad
+    {
+        return Manager.unidadFactory.crearUnidad(unidadApi.id,
+            unidadApi.idPropietario,
+            unidadApi.nombre,
+            unidadApi.clase,
+            unidadApi.nivel,
+            unidadApi.experiencia,
+            Crecimientos(unidadApi.crePv,
+                unidadApi.creFue,
+                unidadApi.creHab,
+                unidadApi.creVel,
+                unidadApi.creSue,
+                unidadApi.creDef,
+                unidadApi.creRes))
+    }
+
+    private fun saveOnApi(unidad: Unidad)
+    {
+        val unidadApi = modelToApiModel(unidad)
 
         RetroFitClient.unidadService.saveUnit(unidadApi)
             .enqueue(object : Callback<ResponseApi<UnidadApi>> {
@@ -76,28 +98,43 @@ class UnidadController : IUnidadController
             })
     }
 
-    override fun agregarUnidadDB(unidad: Unidad)
+    override fun updateWithApi(unidad: Unidad):Boolean
     {
-        unidades.add(unidad)
+        val unidadApi = modelToApiModel(unidad)
+
+        RetroFitClient.unidadService.updateUnit(unidadApi)
+            .enqueue(object : Callback<ResponseApi<UnidadApi>> {
+                override fun onResponse(
+                    call: Call<ResponseApi<UnidadApi>>,
+                    response: retrofit2.Response<ResponseApi<UnidadApi>>
+                ) {
+                    if (response.isSuccessful)
+                        //Toast.makeText(this@CombateActivity, "Unidad actualizada", Toast.LENGTH_SHORT).show()
+                        return true
+                    else
+                        //Toast.makeText(this@CombateActivity, "Error al actualizar unidad", Toast.LENGTH_SHORT).show()
+                        return false
+                }
+
+                override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
+                    //Toast.makeText(this@CombateActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                    return false
+                }
+            })
     }
 
     override fun agregarUnidadApi(unidadApi: UnidadApi)
     {
-        val unidadFromApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
-            unidadApi.idPropietario,
-            unidadApi.nombre,
-            unidadApi.clase,
-            unidadApi.nivel,
-            unidadApi.experiencia,
-            Crecimientos(unidadApi.crePv,
-                unidadApi.creFue,
-                unidadApi.creHab,
-                unidadApi.creVel,
-                unidadApi.creSue,
-                unidadApi.creDef,
-                unidadApi.creRes))
+        val unidadFromApi = apiModeltoModel(unidadApi)
 
         unidades.add(unidadFromApi)
+    }
+
+
+
+    override fun agregarUnidadDB(unidad: Unidad)
+    {
+        unidades.add(unidad)
     }
 
     override fun eliminarUnidadid(id: Int): Boolean
