@@ -1,5 +1,6 @@
 package com.patitofeliz.fireemblem.core.controller
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.patitofeliz.fireemblem.Manager
@@ -18,15 +19,22 @@ class UnidadController : IUnidadController
     private val unidades = mutableListOf<Unidad>()
     private var nextId = 0
 
-    override fun agregarUnidad(nombre: String, tipoClase: String?): String
+    override fun agregarUnidad(context: Context, nombre: String, tipoClase: String?)
     {
         if (nombre.isEmpty())
-            return "No puedes registrar una Unidad sin nombre"
+        {
+            Toast.makeText(context, "No puedes registrar una Unidad sin nombre", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         
         val unidadExistente: Unidad? = this.obtenerUnidadNombre(nombre)
 
         if (unidadExistente != null)
-            return "Ya existe una unidad con el nombre ${nombre}"
+        {
+            Toast.makeText(context, "Ya existe una unidad con el nombre ${nombre}", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val unidad = Manager.unidadFactory.crearUnidad(null, null,nombre, tipoClase)
 
@@ -35,9 +43,9 @@ class UnidadController : IUnidadController
         if (!Manager.loginService.isLogged)
             Manager.unidadRepositorySqLite.agregarUnidad(unidad)
         else
-            saveOnApi(unidad)
+            saveOnApi(context, unidad)
 
-        return "Alistaste a ${nombre} - Clase: ${tipoClase}"
+        Toast.makeText(context, "Alistaste a ${nombre} - Clase: ${tipoClase}", Toast.LENGTH_SHORT).show()
     }
 
     private fun modelToApiModel(unidad: Unidad): UnidadApi
@@ -76,7 +84,7 @@ class UnidadController : IUnidadController
                 unidadApi.creRes))
     }
 
-    private fun saveOnApi(unidad: Unidad)
+    private fun saveOnApi(context: Context, unidad: Unidad)
     {
         val unidadApi = modelToApiModel(unidad)
 
@@ -86,19 +94,19 @@ class UnidadController : IUnidadController
                     call: Call<ResponseApi<UnidadApi>>,
                     response: Response<ResponseApi<UnidadApi>>
                 ) {
-                    if (response.isSuccessful)
-                        Log.d("GUARDAR API", "GUARDAMOS")
+                    /*if (response.isSuccessful)
+                        Toast.makeText(context, "Unidad Guardada: ${unidadApi.nombre}", Toast.LENGTH_SHORT).show()
                     else
-                        Log.d("GUARDAR API", "NO GUARDAMOS")
+                        Toast.makeText(context, "No se guardo la unidad: ${response.body()?.message}", Toast.LENGTH_SHORT).show()*/
                 }
 
                 override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
-                    Log.d("GUARDAR API", "ERROR AL GUARDAR")
+                    //Toast.makeText(context, "Error al intentar guardar la unidad", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-    override fun updateWithApi(unidad: Unidad):Boolean
+    override fun updateWithApi(context: Context, unidad: Unidad)
     {
         val unidadApi = modelToApiModel(unidad)
 
@@ -109,16 +117,13 @@ class UnidadController : IUnidadController
                     response: retrofit2.Response<ResponseApi<UnidadApi>>
                 ) {
                     if (response.isSuccessful)
-                        //Toast.makeText(this@CombateActivity, "Unidad actualizada", Toast.LENGTH_SHORT).show()
-                        return true
+                        Toast.makeText(context, "Unidad actualizada", Toast.LENGTH_SHORT).show()
                     else
-                        //Toast.makeText(this@CombateActivity, "Error al actualizar unidad", Toast.LENGTH_SHORT).show()
-                        return false
+                        Toast.makeText(context, "Error al actualizar unidad", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
-                    //Toast.makeText(this@CombateActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
-                    return false
+                    Toast.makeText(context, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }

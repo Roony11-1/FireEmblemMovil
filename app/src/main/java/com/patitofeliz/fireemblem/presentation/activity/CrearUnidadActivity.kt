@@ -59,8 +59,7 @@ class CrearUnidadActivity : AppCompatActivity()
         }
 
         binding.btnCrearUnidad.setOnClickListener {
-            val toastText = viewModel.crearUnidad()
-            Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show()
+            viewModel.crearUnidad(this@CrearUnidadActivity)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

@@ -275,7 +275,7 @@ class CombateActivity : AppCompatActivity()
             val unidadActualizar = if (ganador == jugador) ganador else perdedor
 
             if (Manager.loginService.isLogged)
-                updateWithApi(unidadActualizar)
+                Manager.unidadController.updateWithApi(this@CombateActivity, unidadActualizar)
             else
                 Manager.unidadController.actualizarUnidad(unidadActualizar)
 
@@ -285,42 +285,5 @@ class CombateActivity : AppCompatActivity()
             finish()
         }
     }
-
-    private fun updateWithApi(unidad: Unidad)
-    {
-        val unidadApi = UnidadApi(
-            unidad.id ?: 0,
-            unidad.idPropietario ?: 0,
-            unidad.nombre,
-            unidad.clase.nombreClase,
-            unidad.nivel.nivel,
-            unidad.nivel.experiencia,
-            unidad.crecimientos.pv,
-            unidad.crecimientos.fue,
-            unidad.crecimientos.hab,
-            unidad.crecimientos.vel,
-            unidad.crecimientos.sue,
-            unidad.crecimientos.def,
-            unidad.crecimientos.res
-        )
-
-        RetroFitClient.unidadService.updateUnit(unidadApi)
-            .enqueue(object : Callback<ResponseApi<UnidadApi>> {
-                override fun onResponse(
-                    call: Call<ResponseApi<UnidadApi>>,
-                    response: retrofit2.Response<ResponseApi<UnidadApi>>
-                ) {
-                    if (response.isSuccessful)
-                        Toast.makeText(this@CombateActivity, "Unidad actualizada", Toast.LENGTH_SHORT).show()
-                    else
-                        Toast.makeText(this@CombateActivity, "Error al actualizar unidad", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onFailure(call: Call<ResponseApi<UnidadApi>>, t: Throwable) {
-                    Toast.makeText(this@CombateActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
-
 
 }

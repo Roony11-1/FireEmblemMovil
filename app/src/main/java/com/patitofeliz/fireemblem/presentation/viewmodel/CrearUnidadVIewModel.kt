@@ -1,5 +1,6 @@
 package com.patitofeliz.fireemblem.presentation.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,10 +36,10 @@ class CrearUnidadVIewModel : ViewModel()
         actualizarPreview()
     }
 
-    fun crearUnidad(): String
+    fun crearUnidad(context: Context)
     {
         Log.d("DEBUG", "Crear unidad: nombre=$nombreUnidad, clase=$claseSeleccionada")
-        return Manager.unidadController.agregarUnidad(nombreUnidad, claseSeleccionada)
+        Manager.unidadController.agregarUnidad(context, nombreUnidad, claseSeleccionada)
     }
     private fun actualizarPreview()
     {
