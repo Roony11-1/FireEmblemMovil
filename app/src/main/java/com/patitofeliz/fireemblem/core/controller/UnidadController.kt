@@ -128,6 +128,44 @@ class UnidadController : IUnidadController
             })
     }
 
+    override  fun getEnemyFromApi(idJugador: Int,
+        onSuccess: (Unidad) -> Unit,
+        onError: (Throwable) -> Unit)
+    {
+        RetroFitClient.unidadService.findOtherUnits(idJugador)
+            .enqueue(object : Callback<List<UnidadApi>> {
+                override fun onResponse(call: Call<List<UnidadApi>>, response: Response<List<UnidadApi>>)
+                {
+                    try
+                    {
+                        if (response.isSuccessful)
+                        {
+                            val lista = response.body()
+                            if (!lista.isNullOrEmpty())
+                            {
+                                val unidadApi = lista.random()
+                                val unidad = apiModeltoModel(unidadApi)
+                                onSuccess(unidad)
+                            }
+                            else
+                                onError(Exception("No se encontraron unidades"))
+                        }
+                        else
+                            onError(Exception("Error HTTP ${response.code()}"))
+                    }
+                    catch (e: Exception)
+                    {
+                        onError(e)
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
+                {
+                    onError(t)
+                }
+            })
+    }
+
     override fun agregarUnidadApi(unidadApi: UnidadApi)
     {
         val unidadFromApi = apiModeltoModel(unidadApi)

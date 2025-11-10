@@ -51,50 +51,20 @@ class CombateActivity : AppCompatActivity()
         val nombreUnidad = intent.getStringExtra("nombreUnidad")!!
         modo = intent.getStringExtra("modo") ?: "offLine"
 
-        if (modo.equals("onLine"))
+        if (modo == "onLine")
         {
-            RetroFitClient.unidadService.findOtherUnits(Manager.loginService.idLogin!!)
-                .enqueue(object : Callback<List<UnidadApi>> {
-                    override fun onResponse(
-                        call: Call<List<UnidadApi>>,
-                        response: Response<List<UnidadApi>>)
-                    {
-                        if (response.isSuccessful)
-                        {
-                            val lista = response.body()
-                            Log.d("APIUnidad", "Lista: ${lista?.size}")
-                            if (!lista.isNullOrEmpty())
-                            {
-                                val unidadApi = lista.random()
-                                enemigoApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
-                                    unidadApi.idPropietario,
-                                    unidadApi.nombre,
-                                    unidadApi.clase,
-                                    unidadApi.nivel,
-                                    unidadApi.experiencia,
-                                    Crecimientos(unidadApi.crePv,
-                                        unidadApi.creFue,
-                                        unidadApi.creHab,
-                                        unidadApi.creVel,
-                                        unidadApi.creSue,
-                                        unidadApi.creDef,
-                                        unidadApi.creRes))
-
-
-                                iniciarBatalla(nombreUnidad)
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
-                    {
-                        t.printStackTrace()
-                    }
+            Manager.unidadController.getEnemyFromApi(Manager.loginService.idLogin!!,
+                onSuccess = { enemigo ->
+                    enemigoApi = enemigo
+                    iniciarBatalla(nombreUnidad)
+                },
+                onError = { error ->
+                    error.printStackTrace()
+                    Toast.makeText(this@CombateActivity, "Error al buscar enemigo: ${error.message}", Toast.LENGTH_SHORT).show()
                 })
         }
         else
             iniciarBatalla(nombreUnidad)
-
     }
 
     private suspend fun playAnimacion(anim: Animacion, imageView: ImageView, unidad: Unidad) =
@@ -124,6 +94,8 @@ class CombateActivity : AppCompatActivity()
         val golpeEstimado = (precision - evasion).coerceIn(0, 100)
         val dmg = combateEngine.calcularDmg(unidad, defensor)
         val critico = combateEngine.calcProbCritico(unidad, defensor)
+        val canDouble = combateEngine.puedeAtacarDoble(unidad, defensor)
+        val cantidadAtaques = if (canDouble) "2X" else "1X"
 
         val text = buildString {
             append("${unidad.nombre}\n")
@@ -131,6 +103,7 @@ class CombateActivity : AppCompatActivity()
             append("Golpe: $golpeEstimado%\n")
             append("Daño: $dmg\n")
             append("Critico: $critico%\n")
+            append("Cantidad de ataques: ${cantidadAtaques}")
         }
 
         if (esJugador)

@@ -18,4 +18,5 @@ interface IUnidadController
 
     fun agregarUnidadApi(unidadApi: UnidadApi)
     fun updateWithApi(context: Context, unidad: Unidad)
+    fun getEnemyFromApi(idJugador: Int, onSuccess: (Unidad) -> Unit, onError: (Throwable) -> Unit)
 }
