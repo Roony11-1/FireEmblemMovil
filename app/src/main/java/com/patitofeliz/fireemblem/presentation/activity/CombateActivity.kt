@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.patitofeliz.fireemblem.Manager
-import com.patitofeliz.fireemblem.Manager.unidadController
 import com.patitofeliz.fireemblem.config.RetroFitClient
 import com.patitofeliz.fireemblem.core.model.Crecimientos
 import com.patitofeliz.fireemblem.core.model.Unidad
@@ -21,7 +20,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CombateActivity : AppCompatActivity() {
+class CombateActivity : AppCompatActivity()
+{
 
     private lateinit var ivJugador: ImageView
     private lateinit var ivEnemigo: ImageView
@@ -48,45 +48,53 @@ class CombateActivity : AppCompatActivity() {
         tvJugador = binding.tvJugador
         tvEnemigo = binding.tvEnemigo
 
-        RetroFitClient.unidadService.findOtherUnits(Manager.loginService.idLogin!!)
-            .enqueue(object : Callback<List<UnidadApi>> {
-                override fun onResponse(
-                    call: Call<List<UnidadApi>>,
-                    response: Response<List<UnidadApi>>)
-                {
-                    if (response.isSuccessful)
-                    {
-                        val lista = response.body()
-                        Log.d("APIUnidad", "Lista: ${lista?.size}")
-                        if (!lista.isNullOrEmpty())
-                        {
-                            val unidadApi = lista.random()
-                            enemigoApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
-                                unidadApi.idPropietario,
-                                unidadApi.nombre,
-                                unidadApi.clase,
-                                unidadApi.nivel,
-                                unidadApi.experiencia,
-                                Crecimientos(unidadApi.crePv,
-                                    unidadApi.creFue,
-                                    unidadApi.creHab,
-                                    unidadApi.creVel,
-                                    unidadApi.creSue,
-                                    unidadApi.creDef,
-                                    unidadApi.creRes))
+        val nombreUnidad = intent.getStringExtra("nombreUnidad")!!
+        modo = intent.getStringExtra("modo") ?: "offLine"
 
-                                val nombreUnidad = intent.getStringExtra("nombreUnidad")!!
-                                modo = intent.getStringExtra("modo") ?: "offLine"
+        if (modo.equals("onLine"))
+        {
+            RetroFitClient.unidadService.findOtherUnits(Manager.loginService.idLogin!!)
+                .enqueue(object : Callback<List<UnidadApi>> {
+                    override fun onResponse(
+                        call: Call<List<UnidadApi>>,
+                        response: Response<List<UnidadApi>>)
+                    {
+                        if (response.isSuccessful)
+                        {
+                            val lista = response.body()
+                            Log.d("APIUnidad", "Lista: ${lista?.size}")
+                            if (!lista.isNullOrEmpty())
+                            {
+                                val unidadApi = lista.random()
+                                enemigoApi = Manager.unidadFactory.crearUnidad(unidadApi.id,
+                                    unidadApi.idPropietario,
+                                    unidadApi.nombre,
+                                    unidadApi.clase,
+                                    unidadApi.nivel,
+                                    unidadApi.experiencia,
+                                    Crecimientos(unidadApi.crePv,
+                                        unidadApi.creFue,
+                                        unidadApi.creHab,
+                                        unidadApi.creVel,
+                                        unidadApi.creSue,
+                                        unidadApi.creDef,
+                                        unidadApi.creRes))
+
+
                                 iniciarBatalla(nombreUnidad)
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
-                {
-                    t.printStackTrace()
-                }
-            })
+                    override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
+                    {
+                        t.printStackTrace()
+                    }
+                })
+        }
+        else
+            iniciarBatalla(nombreUnidad)
+
     }
 
     private suspend fun playAnimacion(anim: Animacion, imageView: ImageView, unidad: Unidad) =

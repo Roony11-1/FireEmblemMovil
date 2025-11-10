@@ -42,7 +42,7 @@ class PrincipalActivity : AppCompatActivity()
         }
 
         /*val context: Context = this // tu context
-        context.deleteDatabase(DBHelper.DATABASE_NAME*/
+        context.deleteDatabase(DBHelper.DATABASE_NAME)*/
 
         if (Manager.loginService.isLogged)
         {
@@ -104,8 +104,6 @@ class PrincipalActivity : AppCompatActivity()
 
     private fun irCrearUnidad()
     {
-        if (unidadController.obtenerUnidades().size == 0)
-            return
         val intent = Intent(this, CrearUnidadActivity::class.java)
 
         startActivity(intent)

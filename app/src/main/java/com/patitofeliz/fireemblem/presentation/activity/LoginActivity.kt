@@ -104,6 +104,7 @@ class LoginActivity : AppCompatActivity()
         binding.btnInvitado.setOnClickListener {
             val intent = Intent(this@LoginActivity, PrincipalActivity::class.java)
             Manager.loginService.isLogged = false
+            Manager.unidadController.limpiar()
             startActivity(intent)
             finish()
         }
