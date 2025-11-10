@@ -9,16 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.patitofeliz.fireemblem.Manager
-import com.patitofeliz.fireemblem.config.RetroFitClient
-import com.patitofeliz.fireemblem.core.model.Crecimientos
 import com.patitofeliz.fireemblem.core.model.Unidad
-import com.patitofeliz.fireemblem.core.model.api.ResponseApi
-import com.patitofeliz.fireemblem.core.model.api.UnidadApi
 import com.patitofeliz.fireemblem.databinding.ActivityCombateBinding
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class CombateActivity : AppCompatActivity()
 {
@@ -137,7 +131,7 @@ class CombateActivity : AppCompatActivity()
         CoroutineScope(Dispatchers.Main).launch {
             var turnoJugador = true
 
-            // Función local para manejar el ataque
+            // ataque
             suspend fun ejecutarAtaque(atacante: Unidad, defensor: Unidad)
             {
                 delay(500L)
@@ -155,12 +149,13 @@ class CombateActivity : AppCompatActivity()
                 val esCritico = (0..100).random() <= critChance.coerceAtMost(100)
                 val aciertaGolpe = (0..100).random() <= golpe.coerceAtMost(100) || esCritico
 
-                // Seleccionar la animación según si es crítico o no
+                // animacion
                 val animAtaqueSeleccionada = if (esCritico)
                     atacante.clase.animCritAtaque
                 else
                     atacante.clase.animAtaque
 
+                // calbacks de la animacion
                 animAtaqueSeleccionada.onFrame = { frameIndex ->
                     // Determina el frame del impacto según el tipo de ataque
                     val frameImpacto = if (esCritico) atacante.clase.frameCritAtaque else atacante.clase.frameAtaque
@@ -201,7 +196,7 @@ class CombateActivity : AppCompatActivity()
                 }
 
 
-                // Ejecutar animación seleccionada (ataque normal o crítico)
+                // ejecuta la anim
                 playAnimacion(animAtaqueSeleccionada, atacanteView, atacante)
             }
 
