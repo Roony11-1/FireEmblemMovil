@@ -31,7 +31,7 @@ class RegisterActivity : AppCompatActivity()
 
         var irVentanaLogin = Intent(this, PrincipalActivity::class.java)
 
-        // Botones
+        // Botones quier ocomitear ctm apooo
         var btnVISesion: Button = findViewById(R.id.btnVolverLogin)
         var btnRegistrar: Button = findViewById(R.id.btnRegistrar)
         // EditText
