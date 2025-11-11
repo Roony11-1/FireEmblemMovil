@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.patitofeliz.fireemblem.Manager
+import com.patitofeliz.fireemblem.Manager.unidadController
 import com.patitofeliz.fireemblem.config.RetroFitClient
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
 import com.patitofeliz.fireemblem.core.model.Crecimientos
@@ -178,6 +179,47 @@ class UnidadController : IUnidadController
     override fun agregarUnidadDB(unidad: Unidad)
     {
         unidades.add(unidad)
+    }
+
+    override fun findMyUnits(
+        idJugador: Int,
+        onSuccess: (Unidad) -> Unit,
+        onError: (Throwable) -> Unit)
+    {
+        RetroFitClient.unidadService.findMyUnits(Manager.loginService.idLogin!!)
+            .enqueue(object : Callback<List<UnidadApi>> {
+                override fun onResponse(
+                    call: Call<List<UnidadApi>>,
+                    response: Response<List<UnidadApi>>)
+                {
+                    try
+                    {
+                        if (response.isSuccessful)
+                        {
+                            val lista = response.body()
+                            Log.d("APIUnidad", "Lista: ${lista?.size}")
+                            if (!lista.isNullOrEmpty())
+                            {
+                                lista.forEach { unidad ->
+                                    val unidadNoApi = apiModeltoModel(unidad)
+                                    onSuccess(unidadNoApi)
+                                }
+                            }
+                            else
+                                onError(Exception("No se encontraron unidades"))
+                        }
+                    }
+                    catch (e: Exception)
+                    {
+                        onError(Exception(e))
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
+                {
+                    onError(t)
+                }
+            })
     }
 
     override fun eliminarUnidadid(id: Int): Boolean

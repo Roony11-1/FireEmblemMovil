@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -46,30 +47,13 @@ class PrincipalActivity : AppCompatActivity()
 
         if (Manager.loginService.isLogged)
         {
-            RetroFitClient.unidadService.findMyUnits(Manager.loginService.idLogin!!)
-                .enqueue(object : Callback<List<UnidadApi>> {
-                    override fun onResponse(
-                        call: Call<List<UnidadApi>>,
-                        response: Response<List<UnidadApi>>)
-                    {
-                        if (response.isSuccessful)
-                        {
-                            val lista = response.body()
-                            Log.d("APIUnidad", "Lista: ${lista?.size}")
-                            if (!lista.isNullOrEmpty())
-                            {
-                                lista.forEach { unidad ->
-                                    Log.d("APIUnidad", "Lista: ${lista?.size} - Unidad: ${unidad.nombre}")
-                                    unidadController.agregarUnidadApi(unidad)
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<UnidadApi>>, t: Throwable)
-                    {
-                        t.printStackTrace()
-                    }
+            Manager.unidadController.findMyUnits(Manager.loginService.idLogin!!,
+                onSuccess = { unidad ->
+                    Manager.unidadController.agregarUnidadDB(unidad)
+                },
+                onError = { error ->
+                    error.printStackTrace()
+                    Toast.makeText(this@PrincipalActivity, "Error al buscar unidades: ${error.message}", Toast.LENGTH_SHORT).show()
                 })
         }
         else
@@ -86,6 +70,7 @@ class PrincipalActivity : AppCompatActivity()
             "Crear Unidad" to { irCrearUnidad() },
             "Ver Unidades" to { irVerUnidades() },
             "Combate" to { irCombate() },
+            "Cámara" to { irCamara() },
             "Salir" to { salir() }
         )
 
@@ -123,6 +108,13 @@ class PrincipalActivity : AppCompatActivity()
         if (unidadController.obtenerUnidades().size == 0)
             return
         val intent = Intent(this, PrepararCombateActivity::class.java)
+
+        startActivity(intent)
+    }
+
+    private fun irCamara()
+    {
+        val intent = Intent(this, CamaraActivity::class.java)
 
         startActivity(intent)
     }
