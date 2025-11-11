@@ -86,6 +86,7 @@ class PrincipalActivity : AppCompatActivity()
             "Crear Unidad" to { irCrearUnidad() },
             "Ver Unidades" to { irVerUnidades() },
             "Combate" to { irCombate() },
+            "Cámara" to { irCamara() },
             "Salir" to { salir() }
         )
 
@@ -123,6 +124,13 @@ class PrincipalActivity : AppCompatActivity()
         if (unidadController.obtenerUnidades().size == 0)
             return
         val intent = Intent(this, PrepararCombateActivity::class.java)
+
+        startActivity(intent)
+    }
+
+    private fun irCamara()
+    {
+        val intent = Intent(this, CamaraActivity::class.java)
 
         startActivity(intent)
     }

@@ -18,6 +18,7 @@ class PrincipalViewModel : ViewModel()
             "Crear Unidad",
             "Ver Unidades",
             "Combate",
+            "Cámara",
             "Salir"
         )
     }
