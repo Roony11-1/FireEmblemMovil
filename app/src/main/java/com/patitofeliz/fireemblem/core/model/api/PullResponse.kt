@@ -6,4 +6,4 @@ data class PullResponse(val pullId: Int,
     val nombre: String,
     val clase: String,
     val tipo: String,
-    val rareza: String)
+    val rareza: String) // crear el activity
