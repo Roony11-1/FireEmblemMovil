@@ -1,5 +1,6 @@
 package com.patitofeliz.fireemblem.config
 
+import com.patitofeliz.fireemblem.core.interfaces.IGachaService
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadService
 import com.patitofeliz.fireemblem.core.interfaces.IUsuarioService
 import retrofit2.Retrofit
@@ -22,5 +23,9 @@ object RetroFitClient
 
     val unidadService: IUnidadService by lazy {
         retrofit.create(IUnidadService::class.java)
+    }
+
+    val gachaService: IGachaService by lazy {
+        retrofit.create(IGachaService::class.java)
     }
 }

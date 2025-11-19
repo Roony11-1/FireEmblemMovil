@@ -16,7 +16,6 @@ import kotlinx.coroutines.*
 
 class CombateActivity : AppCompatActivity()
 {
-
     private lateinit var ivJugador: ImageView
     private lateinit var ivEnemigo: ImageView
     private lateinit var tvLog: TextView
