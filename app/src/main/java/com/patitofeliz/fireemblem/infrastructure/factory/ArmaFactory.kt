@@ -23,6 +23,10 @@ class ArmaFactory : IArmaFactory
         {
             "Hierro" -> listOf(5, 5, 90, 0)
             "Asesina" -> listOf(7, 9, 75, 30)
+            "Plata" -> listOf(8, 13, 80, 0)
+            "Acero" -> listOf(10, 8, 75, 0)
+            "Delgada" -> listOf(2, 3, 100, 5)
+            "Shamshir" -> listOf(5, 8, 75, 35)
             else -> throw IllegalArgumentException("No existe ese tipo: $tipo")
         }
     }
