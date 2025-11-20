@@ -7,9 +7,13 @@ class CombateEngine
 
     fun calcularDmg(atacante: Unidad, defensor: Unidad): Int
     {
+        val arma = atacante.clase.arma
+            ?: throw IllegalStateException("El atacante no tiene arma")
+
         val fuerzaAtacante = atacante.estadisticasBase.fue
         val defensaDefensor = defensor.estadisticasBase.def
-        val potenciaArma = atacante.clase.arma.potencia
+        val potenciaArma = arma.potencia
+
         return ((fuerzaAtacante + potenciaArma) - defensaDefensor).coerceAtLeast(0)
     }
 
@@ -36,8 +40,12 @@ class CombateEngine
 
     fun calcularPrecision(atacante: Unidad): Int
     {
-        return (atacante.estadisticasBase.hab * 2) + (atacante.estadisticasBase.sue / 2) +
-                atacante.clase.arma.golpe
+        val hab = atacante.estadisticasBase.hab
+        val sue = atacante.estadisticasBase.sue
+
+        val golpeArma = atacante.clase.arma?.golpe ?: 0
+
+        return (hab * 2) + (sue / 2) + golpeArma
     }
 
     fun calcularEvasion(defensor: Unidad): Int
@@ -47,7 +55,11 @@ class CombateEngine
 
     fun velocidadAtaque(unidad: Unidad): Int
     {
-        return unidad.estadisticasBase.vel - (unidad.clase.arma.peso - unidad.estadisticasBase.con)
+        val pesoArma = unidad.clase.arma?.peso ?: 0
+        val vel = unidad.estadisticasBase.vel
+        val con = unidad.estadisticasBase.con
+
+        return vel - (pesoArma - con)
     }
 
     fun calcularGolpe(atacante: Unidad, defensor: Unidad): Int
@@ -62,7 +74,10 @@ class CombateEngine
 
     fun calcularHacerCritico(atacante: Unidad): Int
     {
-        return (atacante.estadisticasBase.hab/2) + (atacante.clase.arma.critico)
+        val hab = atacante.estadisticasBase.hab
+        val criticoArma = atacante.clase.arma?.critico ?: 0
+
+        return (hab / 2) + criticoArma
     }
 
     fun calcularDodgeCritico(defensor: Unidad): Int

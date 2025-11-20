@@ -2,6 +2,7 @@ package com.patitofeliz.fireemblem
 
 import android.content.Context
 import com.patitofeliz.fireemblem.core.controller.UnidadController
+import com.patitofeliz.fireemblem.core.interfaces.IArmaFactory
 import com.patitofeliz.fireemblem.core.interfaces.IClaseFactory
 import com.patitofeliz.fireemblem.core.interfaces.ICrecimientoFactory
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadController
@@ -12,6 +13,7 @@ import com.patitofeliz.fireemblem.core.services.UnidadService
 import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 import com.patitofeliz.fireemblem.infrastructure.data.UnidadRepository
 import com.patitofeliz.fireemblem.infrastructure.data.UnidadRepositorySqLite
+import com.patitofeliz.fireemblem.infrastructure.factory.ArmaFactory
 import com.patitofeliz.fireemblem.infrastructure.factory.ClaseFactory
 import com.patitofeliz.fireemblem.infrastructure.factory.CrecimientoFactory
 import com.patitofeliz.fireemblem.infrastructure.factory.UnidadFactory
@@ -21,6 +23,7 @@ object Manager
     lateinit var claseFactory: IClaseFactory
         private set
     lateinit var crecimientoFactory: ICrecimientoFactory
+    lateinit var armaFactory: IArmaFactory
     lateinit var unidadFactory: IUnidadFactory
         private set
 
@@ -46,7 +49,8 @@ object Manager
     {
         claseFactory = ClaseFactory()
         crecimientoFactory = CrecimientoFactory()
-        unidadFactory = UnidadFactory(claseFactory, crecimientoFactory)
+        armaFactory = ArmaFactory()
+        unidadFactory = UnidadFactory(claseFactory, crecimientoFactory, armaFactory)
         unidadRepository = UnidadRepository()
         combateEngine = CombateEngine()
         unidadService = UnidadService(unidadRepository, combateEngine)

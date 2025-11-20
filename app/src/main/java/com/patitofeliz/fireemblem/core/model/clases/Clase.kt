@@ -9,7 +9,8 @@ import com.patitofeliz.fireemblem.core.usecase.CombateEngine
 
 abstract class Clase(
     var nombreClase: String,
-    var arma: Arma,
+    var arma: Arma?,
+    var tipoArma: String,
     var sprite: Sprite,
     var estadisticasBase: Estadisticas,
     var estadisticasMaximas: Estadisticas)

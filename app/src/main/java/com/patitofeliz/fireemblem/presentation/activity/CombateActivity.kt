@@ -91,7 +91,9 @@ class CombateActivity : AppCompatActivity()
         val cantidadAtaques = if (canDouble) "2X" else "1X"
 
         val text = buildString {
-            append("${unidad.nombre}\n")
+            append("Nombre: ${unidad.nombre} - Nivel: ${unidad.nivel.nivel}\n")
+            append("Clase: ${unidad.clase.nombreClase}\n")
+            append("Arma: ${unidad.clase.arma?.nombre ?: "Sin arma"}\n")
             append("PV: ${unidad.estadisticasActuales.pv}\n")
             append("Golpe: $golpeEstimado%\n")
             append("Daño: $dmg\n")
@@ -117,7 +119,7 @@ class CombateActivity : AppCompatActivity()
             val claseAleatoria = clases.random()
             val nivelJugador: Int = jugador.nivel.nivel
             val aleatorizadorNivel: Int = (-2..3).random()
-            enemigo = Manager.unidadFactory.crearUnidad(-1, null,"Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel).coerceAtLeast(1))
+            enemigo = Manager.unidadFactory.crearUnidad(-1, "Asesina",null,"Enemigo", claseAleatoria, (nivelJugador+aleatorizadorNivel).coerceAtLeast(1))
         }
 
         // Reiniciar PV
@@ -133,6 +135,12 @@ class CombateActivity : AppCompatActivity()
             // ataque
             suspend fun ejecutarAtaque(atacante: Unidad, defensor: Unidad)
             {
+                if (atacante.clase.arma == null)
+                {
+                    tvLog.append("${atacante.nombre} no tiene arma y no puede atacar.\n")
+                    return
+                }
+
                 delay(500L)
                 val atacanteView = if (atacante == jugador) ivJugador else ivEnemigo
                 val defensorView = if (defensor == jugador) ivJugador else ivEnemigo
