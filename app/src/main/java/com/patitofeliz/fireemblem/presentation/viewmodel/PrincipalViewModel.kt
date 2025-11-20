@@ -14,12 +14,24 @@ class PrincipalViewModel : ViewModel()
 
     init {
         // Aquí defines las opciones del menú principal
-        _opcionesMenu.value = listOf(
-            "Crear Unidad",
-            "Ver Unidades",
-            "Combate",
-            "Cámara",
-            "Salir"
-        )
+        _opcionesMenu.value = if (Manager.loginService.isLogged)
+        {
+            listOf(
+                "Crear Unidad",
+                "Banners",
+                "Ver Unidades",
+                "Combate",
+                "Cámara",
+                "Salir")
+        }
+        else
+        {
+            listOf(
+                "Crear Unidad",
+                "Ver Unidades",
+                "Combate",
+                "Cámara",
+                "Salir")
+        }
     }
 }

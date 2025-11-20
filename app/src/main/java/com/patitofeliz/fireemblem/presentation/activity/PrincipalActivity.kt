@@ -71,7 +71,8 @@ class PrincipalActivity : AppCompatActivity()
             "Ver Unidades" to { irVerUnidades() },
             "Combate" to { irCombate() },
             "Cámara" to { irCamara() },
-            "Salir" to { salir() }
+            "Salir" to { salir() },
+            "Banners" to {irBanners()}
         )
 
         binding.lvPrincipal.setOnItemClickListener { parent, view, position, id ->
@@ -85,6 +86,13 @@ class PrincipalActivity : AppCompatActivity()
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun irBanners()
+    {
+        val intent = Intent(this, PullActivity::class.java)
+
+        startActivity(intent)
     }
 
     private fun irCrearUnidad()
