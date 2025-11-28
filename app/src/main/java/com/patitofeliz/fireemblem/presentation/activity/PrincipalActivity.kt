@@ -90,7 +90,7 @@ class PrincipalActivity : AppCompatActivity()
 
     private fun irBanners()
     {
-        val intent = Intent(this, PullActivity::class.java)
+        val intent = Intent(this, BannerActivity::class.java)
 
         startActivity(intent)
     }

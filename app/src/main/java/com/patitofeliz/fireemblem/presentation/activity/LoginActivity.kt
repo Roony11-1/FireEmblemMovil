@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,6 +16,7 @@ import com.patitofeliz.fireemblem.core.model.api.ResponseApi
 import com.patitofeliz.fireemblem.core.model.api.UnidadApi
 import com.patitofeliz.fireemblem.core.model.api.Usuario
 import com.patitofeliz.fireemblem.databinding.ActivityLoginBinding
+import com.patitofeliz.fireemblem.presentation.viewmodel.BannerViewModel
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -55,35 +57,25 @@ class LoginActivity : AppCompatActivity()
                                 return
                             }
 
-                            if (responseApi.status == "200")
-                            {
-                                val usuario = responseApi.entity
+                            val usuario = responseApi.data
 
-                                if (usuario == null)
-                                    return
+                            if (usuario == null)
+                                return
 
-                                Manager.loginService.idLogin = usuario.id
-                                Manager.loginService.isLogged = true
+                            Manager.loginService.idLogin = usuario.id
+                            Manager.loginService.isLogged = true
+                            Manager.loginService.tipo = usuario.tipo
 
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "Logeado correctamente - ID: ${usuario.id}",
-                                    Toast.LENGTH_SHORT
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "Logeado correctamente - ID: ${usuario.id}",
+                                Toast.LENGTH_SHORT
                                 ).show()
 
-                                // Ir a la actividad principal
-                                val intent = Intent(this@LoginActivity, PrincipalActivity::class.java)
-                                startActivity(intent)
-                                finish()
-                            }
-                            else
-                            {
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "Logeo incorrecto: ${responseApi.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            // Ir a la actividad principal
+                            val intent = Intent(this@LoginActivity, PrincipalActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }
                         else
                             Toast.makeText(this@LoginActivity, "Error al intentar logear", Toast.LENGTH_SHORT).show()

@@ -26,12 +26,19 @@ class PullActivity : AppCompatActivity()
         binding = ActivityPullBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val idBanner: Int = intent.getIntExtra("idBannerSeleccionado", -1)
+
+        if (idBanner == -1)
+        {
+            Toast.makeText(this@PullActivity, "No has seleccionado ningun banner", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+
         binding.btnPullBanner.setOnClickListener {
 
-            RetroFitClient.gachaService.pull(1, Manager.loginService.idLogin)
+            RetroFitClient.gachaService.pull(idBanner, Manager.loginService.idLogin)
                 .enqueue(object : Callback<PullResponse>
                 {
-
                     override fun onResponse(
                         call: Call<PullResponse>,
                         response: Response<PullResponse>)

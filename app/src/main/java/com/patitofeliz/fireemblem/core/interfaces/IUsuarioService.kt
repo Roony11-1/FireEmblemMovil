@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface IUsuarioService
 {
-    @POST("usuarios/registro")
+    @POST("usuarios")
     fun registrarUsuario(@Body usuario: Usuario): Call<ResponseApi<Usuario>>
     @POST("usuarios/login")
     fun loginUsuario(@Body loginRequest: LoginRequest): Call<ResponseApi<Usuario>>

@@ -19,6 +19,9 @@
         android:theme="@style/Theme.FireEmblem"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".presentation.activity.BannerActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.activity.PullActivity"
             android:exported="false" />
         <activity
