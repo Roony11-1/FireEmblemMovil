@@ -55,7 +55,7 @@ class UnidadRepositorySqLite(context: Context)
             cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COL_CREDEF)),
             cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COL_CRERES))
         )
-        return Manager.unidadFactory.crearUnidad(id, null, nombre, clase, nivel, exp, crecimiento)
+        return Manager.unidadFactory.crearUnidad(id, "Hierro",null, nombre, clase, nivel, exp, crecimiento)
     }
 
     fun obtenerUnidades(): List<Unidad>

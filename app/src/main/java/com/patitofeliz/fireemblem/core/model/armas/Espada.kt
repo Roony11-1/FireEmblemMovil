@@ -1,5 +1,3 @@
 package com.patitofeliz.fireemblem.core.model.armas
 
-class Espada : Arma("Espada", 5, 5, 90, 0)
-{
-}
+class Espada(tipo: String, peso: Int, potencia: Int, golpe: Int, critico: Int) : Arma("Espada "+tipo, peso, potencia, golpe, critico)

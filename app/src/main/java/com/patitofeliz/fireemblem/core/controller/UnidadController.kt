@@ -37,7 +37,7 @@ class UnidadController : IUnidadController
             return
         }
 
-        val unidad = Manager.unidadFactory.crearUnidad(null, null,nombre, tipoClase)
+        val unidad = Manager.unidadFactory.crearUnidad(null, "Hierro",null,nombre, tipoClase)
 
         unidades.add(unidad)
 
@@ -71,6 +71,7 @@ class UnidadController : IUnidadController
     private fun apiModeltoModel(unidadApi: UnidadApi):Unidad
     {
         return Manager.unidadFactory.crearUnidad(unidadApi.id,
+            "Hierro",
             unidadApi.idPropietario,
             unidadApi.nombre,
             unidadApi.clase,

@@ -1,13 +1,15 @@
 package com.patitofeliz.fireemblem.core.model.clases
 
 import Animacion
+import com.patitofeliz.fireemblem.Manager
 import com.patitofeliz.fireemblem.R
 import com.patitofeliz.fireemblem.core.model.Estadisticas
 import com.patitofeliz.fireemblem.core.model.Sprite
-import com.patitofeliz.fireemblem.core.model.armas.Espada
 
-class Roy : Clase(nombreClase = "Lord (Roy)",
-    arma = Espada(),
+class Roy : Clase(
+    nombreClase = "Lord (Roy)",
+    arma = null,
+    tipoArma = "Espada",
     sprite = Sprite(
         spriteScreen = R.drawable.roy_screen,
         spriteIdle = R.drawable.roy_idle,

@@ -5,5 +5,5 @@ import com.patitofeliz.fireemblem.core.model.Unidad
 
 interface IUnidadFactory
 {
-    fun crearUnidad(id: Int?, idPropietario: Int?, nombre: String, tipo: String?, nivel: Int=1, experiencia: Int=0, crecimiento: Crecimientos?=null): Unidad
+    fun crearUnidad(id: Int?, tipoArma: String, idPropietario: Int?, nombre: String, tipo: String?, nivel: Int=1, experiencia: Int=0, crecimiento: Crecimientos?=null): Unidad
 }

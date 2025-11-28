@@ -5,10 +5,11 @@ import com.patitofeliz.fireemblem.core.model.Estadisticas
 import com.patitofeliz.fireemblem.core.model.Sprite
 
 import com.patitofeliz.fireemblem.R
-import com.patitofeliz.fireemblem.core.model.armas.Espada
 
-class Mirmidon : Clase(nombreClase = "Mirmidón",
-    arma = Espada(),
+class Mirmidon : Clase(
+    nombreClase = "Mirmidón",
+    arma = null,
+    tipoArma = "Espada",
     sprite = Sprite(
         spriteScreen = R.drawable.mirmidon_screen,
         spriteIdle = R.drawable.mirmidon_idle,
