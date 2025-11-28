@@ -8,6 +8,6 @@ data class Banner(val id: Int?,
 {
     override fun toString(): String
     {
-        return "Banner: $nombre - Descripción: $descripcion"
+        return nombre
     }
 }

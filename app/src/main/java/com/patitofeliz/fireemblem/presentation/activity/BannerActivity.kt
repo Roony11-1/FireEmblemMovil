@@ -3,15 +3,21 @@ package com.patitofeliz.fireemblem.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.patitofeliz.fireemblem.Manager
 import com.patitofeliz.fireemblem.R
 import com.patitofeliz.fireemblem.core.model.api.Banner
+import com.patitofeliz.fireemblem.core.model.api.BannerItem
 import com.patitofeliz.fireemblem.databinding.ActivityBannerBinding
 import com.patitofeliz.fireemblem.presentation.viewmodel.BannerViewModel
 import kotlin.getValue
@@ -55,8 +61,10 @@ class BannerActivity : AppCompatActivity()
         binding.lvBanners.setOnItemClickListener { parent, view, position, _ ->
             val bannerSeleccionado: Banner = parent.getItemAtPosition(position) as Banner
 
-            if (bannerSeleccionado != null)
-                    idBannerSeleccionado = bannerSeleccionado.id ?: -1
+            if (bannerSeleccionado == null)
+                    return@setOnItemClickListener
+
+            mostrarDetalleBanner(bannerSeleccionado)
 
             Toast.makeText(this,
                 "Has seleccionado el banner con id: $idBannerSeleccionado",
@@ -106,15 +114,51 @@ class BannerActivity : AppCompatActivity()
         }
     }
 
+    private  fun mostrarDetalleBanner(banner: Banner)
+    {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_detalle_banner, null)
+
+        val tvDescripcion = dialogView.findViewById<TextView>(R.id.tvDescripcionBanner)
+        val lvItems = dialogView.findViewById<ListView>(R.id.lvItemsBanner)
+
+        // Adapter para mostrar los items
+        val adapterItems = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            mutableListOf<BannerItem>()
+        )
+
+        lvItems.adapter = adapterItems
+
+        adapterItems.clear()
+        if (banner.items.size > 0)
+            adapterItems.addAll(banner.items)
+        else
+        {
+            adapterItems.add(BannerItem(null, nombre = "Sin items", null, null, null, null))
+        }
+
+
+        tvDescripcion.text = banner.descripcion
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Banner: "+banner.nombre)
+            .setView(dialogView)
+            .setNegativeButton("Cerrar", null)
+            .create()
+
+        dialog.show()
+    }
+
     private fun mostrarDialogoCrearBanner()
     {
         val dialogView = layoutInflater.inflate(R.layout.dialog_crear_banner, null)
 
-        val etNombre = dialogView.findViewById<android.widget.EditText>(R.id.etNombre)
-        val etDescripcion = dialogView.findViewById<android.widget.EditText>(R.id.etDescripcion)
-        val chkActivo = dialogView.findViewById<android.widget.CheckBox>(R.id.chkActivo)
+        val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
+        val etDescripcion = dialogView.findViewById<EditText>(R.id.etDescripcion)
+        val chkActivo = dialogView.findViewById<CheckBox>(R.id.chkActivo)
 
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("Crear Banner")
             .setView(dialogView)
             .setPositiveButton("Guardar") { _, _ ->
@@ -133,7 +177,8 @@ class BannerActivity : AppCompatActivity()
                     id = null,
                     nombre = nombre,
                     descripcion = descripcion,
-                    activo = activo)
+                    activo = activo,
+                    items = listOf())
 
                 viewModel.guardarBanner(this@BannerActivity, banner,
                     onFinish = {
