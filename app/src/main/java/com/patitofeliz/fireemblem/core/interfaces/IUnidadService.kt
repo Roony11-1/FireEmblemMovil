@@ -11,12 +11,12 @@ import retrofit2.http.Path
 
 interface IUnidadService
 {
-    @GET("unidades/propietario/{idPropietario}")
+    @GET("/api/movil/unidades/propietario/{idPropietario}")
     fun findMyUnits(@Path("idPropietario") idPropietario: Int): Call<List<UnidadApi>>
-    @PUT("unidades/update")
+    @PUT("/api/movil/unidades/update")
     fun updateUnit(@Body unidadApi: UnidadApi): Call<ResponseApi<UnidadApi>>
-    @POST("unidades")
+    @POST("/api/movil/unidades")
     fun saveUnit(@Body unidadApi: UnidadApi): Call<ResponseApi<UnidadApi>>
-    @GET("unidades/propietario/not/{idPropietario}")
+    @GET("/api/movil/unidades/propietario/not/{idPropietario}")
     fun findOtherUnits(@Path("idPropietario") idPropietario: Int):Call<List<UnidadApi>>
 }
