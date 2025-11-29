@@ -297,7 +297,7 @@ class BannerActivity : AppCompatActivity()
         val dialog = AlertDialog.Builder(this)
             .setTitle("$title Banner")
             .setView(dialogView)
-            .setPositiveButton("$accion") { _, _ ->
+            .setPositiveButton(accion) { _, _ ->
                 val nombre = etNombre.text.toString()
                 val descripcion = etDescripcion.text.toString()
                 val activo = chkActivo.isChecked

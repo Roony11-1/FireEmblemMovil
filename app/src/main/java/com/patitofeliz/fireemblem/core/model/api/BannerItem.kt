@@ -3,12 +3,12 @@ package com.patitofeliz.fireemblem.core.model.api
 import com.patitofeliz.fireemblem.Manager
 
 data class BannerItem(val id: Int?,
-    val nombre: String?,
-    val clase: String?,
-    val tipo: String?,
-    val rareza: String?,
-    val probabilidad: Double?,
-    val activo: Boolean?)
+    var nombre: String?,
+    var clase: String?,
+    var tipo: String?,
+    var rareza: String?,
+    var probabilidad: Double?,
+    var activo: Boolean?)
 {
     override fun toString(): String
     {
