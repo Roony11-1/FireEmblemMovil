@@ -5,14 +5,17 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface IBannerService
 {
-    @GET("movil/banner")
+    @GET("/api/movil/banner")
     fun obtenerBanners(): Call<List<Banner>>
-    @GET("movil/banner/activo/{activo}")
+    @GET("/api/movil/banner/activo/{activo}")
     fun obtenerBannersActivos(@Path("activo") activo: Boolean): Call<List<Banner>>
-    @POST("movil/banner")
+    @POST("/api/movil/banner")
     fun guardarBanner(@Body banner: Banner): Call<Banner>
+    @PUT("/api/movil/banner/id/{id}")
+    fun updatearBanner(@Path("id") id: Int, @Body banner: Banner): Call<Banner>
 }

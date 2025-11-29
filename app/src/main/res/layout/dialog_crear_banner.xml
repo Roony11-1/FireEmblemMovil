@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="331dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="92dp">
 
         <EditText
             android:id="@+id/etNombre"
@@ -31,6 +31,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Activo" />
+
+        <ListView
+            android:id="@+id/lvAddBannerItems"
+            android:layout_width="wrap_content"
+            android:layout_height="260dp" />
+
+        <Spinner
+            android:id="@+id/spAddBannerItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnAddBannerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

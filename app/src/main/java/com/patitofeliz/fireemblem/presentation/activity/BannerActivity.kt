@@ -3,9 +3,11 @@ package com.patitofeliz.fireemblem.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,7 +27,7 @@ class BannerActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityBannerBinding
     private val viewModel: BannerViewModel by viewModels()
-    private val esAdmin = Manager.loginService.tipo == "admin"
+    private val isAdmin = Manager.loginService.tipo == "admin"
     private var bannerSeleccionado: Banner = Banner(null, null, null, nombre = "SinSeleccionar", null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +39,12 @@ class BannerActivity : AppCompatActivity()
         vistaPorRol()
 
         // Lista de Banners
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            mutableListOf<Banner>()
-        )
+        val adapter = crearAdapter<Banner>()
+
         binding.lvBanners.adapter = adapter
 
         viewModel.banners.observe(this) { lista ->
-            if (lista.isEmpty() && !esAdmin)
+            if (lista.isEmpty() && !isAdmin)
             {
                 Toast.makeText(this, "No hay Banners en el sistema", Toast.LENGTH_SHORT).show()
                 finish()
@@ -68,6 +67,11 @@ class BannerActivity : AppCompatActivity()
 
         binding.btnPull.setOnClickListener {
             // Ir al activity pull con los el banner seleccionado
+            if (bannerSeleccionado.items?.size == 0)
+            {
+                Toast.makeText(this, "El Banner no tiene elementos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, PullActivity::class.java)
             intent.putExtra("idBannerSeleccionado", bannerSeleccionado.id)
 
@@ -81,9 +85,17 @@ class BannerActivity : AppCompatActivity()
         }
     }
 
+    private fun <T> crearAdapter(items: List<T> = emptyList()): ArrayAdapter<T>
+    {
+        return ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            items.toMutableList())
+    }
+
     private fun cargarBanners()
     {
-        if (esAdmin)
+        if (isAdmin)
         {
             viewModel.cargarBanners()
         }
@@ -96,12 +108,15 @@ class BannerActivity : AppCompatActivity()
     private fun vistaPorRol()
     {
         cargarBanners()
-        if (esAdmin)
+        if (isAdmin)
         {
             binding.btnEditarBanner.visibility = android.view.View.VISIBLE
             binding.btnEditarBanner.setOnClickListener {
                 if (bannerSeleccionado.id == null)
+                {
+                    Toast.makeText(this, "Debes seleccionar un banner primero", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
+                }
 
                 mostrarDialogoCrearBanner(bannerSeleccionado)
             }
@@ -125,11 +140,7 @@ class BannerActivity : AppCompatActivity()
         val lvItems = dialogView.findViewById<ListView>(R.id.lvItemsBanner)
 
         // Adapter para mostrar los items
-        val adapterItems = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            mutableListOf<BannerItem>()
-        )
+        val adapterItems = crearAdapter<BannerItem>()
 
         lvItems.adapter = adapterItems
 
@@ -148,7 +159,7 @@ class BannerActivity : AppCompatActivity()
             .setTitle("Banner: "+banner.nombre)
             .setView(dialogView)
             .setPositiveButton("Seleccionar", {_, _ ->
-                if (banner.items!!.size > 0)
+                if (banner.items!!.size > 0 || isAdmin)
                 {
                     bannerSeleccionado = banner
                     if (bannerSeleccionado.id != null)
@@ -174,6 +185,9 @@ class BannerActivity : AppCompatActivity()
         val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
         val etDescripcion = dialogView.findViewById<EditText>(R.id.etDescripcion)
         val chkActivo = dialogView.findViewById<CheckBox>(R.id.chkActivo)
+        val lvItems = dialogView.findViewById<ListView>(R.id.lvAddBannerItems)
+        val spItems = dialogView.findViewById<Spinner>(R.id.spAddBannerItems)
+        val btnAddItem = dialogView.findViewById<Button>(R.id.btnAddBannerItem)
 
         val bannerModificado = Banner(
             id = banner.id,
@@ -182,16 +196,35 @@ class BannerActivity : AppCompatActivity()
             activo = banner.activo,
             items = banner.items)
 
+        val adapterItems = crearAdapter<BannerItem>()
+
+        lvItems.adapter = adapterItems
+
+        adapterItems.clear()
+        if (bannerModificado.items?.size!! > 0)
+            adapterItems.addAll(bannerModificado.items!!)
+        else
+        {
+            adapterItems.add(BannerItem(null, nombre = "Sin items", null, null, null, null, null))
+        }
+
         etNombre.setText(bannerModificado.nombre)
         etDescripcion.setText(bannerModificado.descripcion)
         chkActivo.isChecked = bannerModificado.activo ?: false
 
+        var accion: String = "Guardar"
+        var title:String = "Crear"
+
+        if (banner.id != null)
+        {
+            accion = "Actualizar"
+            title = "Actualizar"
+        }
+
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Crear Banner")
+            .setTitle("$title Banner")
             .setView(dialogView)
-            .setPositiveButton("Guardar") { _, _ ->
-
-
+            .setPositiveButton("$accion") { _, _ ->
                 val nombre = etNombre.text.toString()
                 val descripcion = etDescripcion.text.toString()
                 val activo = chkActivo.isChecked
@@ -206,10 +239,16 @@ class BannerActivity : AppCompatActivity()
                     return@setPositiveButton
                 }
 
-                viewModel.guardarBanner(this@BannerActivity, bannerModificado,
-                    onFinish = {
-                        cargarBanners()
-                    })
+                if (bannerModificado.id == null)
+                    viewModel.guardarBanner(this@BannerActivity, bannerModificado,
+                        onFinish = {
+                            cargarBanners()
+                        })
+                else
+                    viewModel.updateBanner(this@BannerActivity, bannerModificado.id!!, bannerModificado,
+                        onFinish = {
+                            cargarBanners()
+                        })
             }
             .setNegativeButton("Cancelar", null)
             .create()

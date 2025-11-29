@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.patitofeliz.fireemblem.config.RetroFitClient
 import com.patitofeliz.fireemblem.core.model.api.Banner
+import com.patitofeliz.fireemblem.core.model.api.BannerItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,6 +17,8 @@ class BannerViewModel : ViewModel()
 {
     private val _banners = MutableLiveData<List<Banner>>()
     public val banners: LiveData<List<Banner>> get() = _banners
+    private val _items = MutableLiveData<List<BannerItem>>()
+    public val items: LiveData<List<BannerItem>> get() = _items
 
     fun guardarBanner(context: Context, banner: Banner, onFinish: () -> Unit)
     {
@@ -47,6 +50,41 @@ class BannerViewModel : ViewModel()
                 override fun onFailure(call: Call<Banner>, t: Throwable)
                 {
                     Toast.makeText(context, "Error al intentar guardar el banner", Toast.LENGTH_SHORT).show()
+                    onFinish()
+                }
+            })
+    }
+
+    fun updateBanner(context: Context, id: Int, banner: Banner, onFinish: () -> Unit)
+    {
+        RetroFitClient.bannerService.updatearBanner(id, banner)
+            .enqueue(object : Callback<Banner>
+            {
+                override fun onResponse(call: Call<Banner>, response: Response<Banner>)
+                {
+                    Log.d("BANNER", "Response code: ${response.code()}")
+
+                    if (response.isSuccessful)
+                    {
+                        val bannerRes = response.body()
+                        Log.d("BANNER", "Body: $bannerRes")
+
+                        if (bannerRes != null) {
+                            Toast.makeText(context, "Has actualizado el banner: " + bannerRes.nombre, Toast.LENGTH_SHORT).show()
+                            onFinish()
+                        }
+                    }
+                    else
+                    {
+                        Log.e("BANNER", "Error body: ${response.errorBody()?.string()}")
+                        Toast.makeText(context, "Error del servidor", Toast.LENGTH_SHORT).show()
+                        onFinish()
+                    }
+                }
+
+                override fun onFailure(call: Call<Banner>, t: Throwable)
+                {
+                    Toast.makeText(context, "Error al intentar actualizar el banner", Toast.LENGTH_SHORT).show()
                     onFinish()
                 }
             })
