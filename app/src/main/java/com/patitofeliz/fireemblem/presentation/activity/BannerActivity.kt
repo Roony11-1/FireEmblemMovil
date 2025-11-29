@@ -95,6 +95,7 @@ class BannerActivity : AppCompatActivity()
 
     private fun cargarBanners()
     {
+        viewModel.cargarBannerItemsActivos()
         if (isAdmin)
         {
             viewModel.cargarBanners()
@@ -124,11 +125,25 @@ class BannerActivity : AppCompatActivity()
             binding.btnNuevoBanner.setOnClickListener {
                 mostrarDialogoCrearBanner(Banner(null, false, "", "", listOf()))
             }
+            binding.btnBorrarBanner.visibility = android.view.View.VISIBLE
+            binding.btnBorrarBanner.setOnClickListener {
+                if (bannerSeleccionado.nombre=="SinSeleccionar")
+                {
+                    Toast.makeText(this, "Debes seleccionar un banner primero", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                viewModel.deleteBanner(this, bannerSeleccionado.id,
+                    onFinish = {
+                        cargarBanners()
+                        bannerSeleccionado = Banner(null, null, null, nombre = "SinSeleccionar", null)
+                    })
+            }
         }
         else
         {
-                binding.btnNuevoBanner.visibility = android.view.View.GONE
-                binding.btnEditarBanner.visibility = android.view.View.GONE
+            binding.btnNuevoBanner.visibility = android.view.View.GONE
+            binding.btnEditarBanner.visibility = android.view.View.GONE
+            binding.btnBorrarBanner.visibility = android.view.View.GONE
         }
     }
 
@@ -197,8 +212,16 @@ class BannerActivity : AppCompatActivity()
             items = banner.items)
 
         val adapterItems = crearAdapter<BannerItem>()
+        val adapterSpItems = crearAdapter<BannerItem>()
 
         lvItems.adapter = adapterItems
+        spItems.adapter = adapterSpItems
+        viewModel.items.observe(this) { itemList ->
+            itemList?.let {
+                adapterSpItems.clear()
+                adapterSpItems.addAll(it)
+            }
+        }
 
         adapterItems.clear()
         if (bannerModificado.items?.size!! > 0)
@@ -211,6 +234,30 @@ class BannerActivity : AppCompatActivity()
         etNombre.setText(bannerModificado.nombre)
         etDescripcion.setText(bannerModificado.descripcion)
         chkActivo.isChecked = bannerModificado.activo ?: false
+
+        btnAddItem.setOnClickListener {
+            val itemSeleccionado = spItems.selectedItem as? BannerItem
+            if (itemSeleccionado != null)
+            {
+                var yaExiste = false
+                for (i in 0 until adapterItems.count)
+                {
+                    val item = adapterItems.getItem(i)
+                    if (item?.id == itemSeleccionado.id)
+                    {
+                        yaExiste = true
+                        break
+                    }
+                }
+
+                if (!yaExiste)
+                {
+                    adapterItems.add(itemSeleccionado)
+                    adapterItems.notifyDataSetChanged()
+                } else
+                    Toast.makeText(this, "El item ya está en la lista", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         var accion: String = "Guardar"
         var title:String = "Crear"
@@ -238,6 +285,15 @@ class BannerActivity : AppCompatActivity()
                     Toast.makeText(this, "El nombre, descripcion es obligatorio", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
+
+                val itemsSeleccionados = mutableListOf<BannerItem>()
+                for (i in 0 until adapterItems.count)
+                {
+                    val item = adapterItems.getItem(i)
+                    if (item?.id != null)
+                        itemsSeleccionados.add(item)
+                }
+                bannerModificado.items = itemsSeleccionados
 
                 if (bannerModificado.id == null)
                     viewModel.guardarBanner(this@BannerActivity, bannerModificado,

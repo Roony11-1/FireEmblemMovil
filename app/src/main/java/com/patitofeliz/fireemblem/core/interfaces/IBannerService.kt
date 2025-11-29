@@ -3,6 +3,7 @@ package com.patitofeliz.fireemblem.core.interfaces
 import com.patitofeliz.fireemblem.core.model.api.Banner
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -18,4 +19,6 @@ interface IBannerService
     fun guardarBanner(@Body banner: Banner): Call<Banner>
     @PUT("/api/movil/banner/id/{id}")
     fun updatearBanner(@Path("id") id: Int, @Body banner: Banner): Call<Banner>
+    @DELETE("/api/movil/banner/id/{id}")
+    fun deleteByIdBanner(@Path("id") id: Int):Call<Void>
 }

@@ -1,5 +1,6 @@
 package com.patitofeliz.fireemblem.config
 
+import com.patitofeliz.fireemblem.core.interfaces.IBannerItemService
 import com.patitofeliz.fireemblem.core.interfaces.IBannerService
 import com.patitofeliz.fireemblem.core.interfaces.IGachaService
 import com.patitofeliz.fireemblem.core.interfaces.IUnidadService
@@ -32,5 +33,9 @@ object RetroFitClient
 
     val bannerService: IBannerService by lazy {
         retrofit.create(IBannerService::class.java)
+    }
+
+    val bannerItemService: IBannerItemService by lazy {
+        retrofit.create(IBannerItemService::class.java)
     }
 }

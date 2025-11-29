@@ -90,6 +90,37 @@ class BannerViewModel : ViewModel()
             })
     }
 
+    fun deleteBanner(context: Context, id: Int?, onFinish: () -> Unit)
+    {
+        if (id == null)
+            return
+
+        RetroFitClient.bannerService.deleteByIdBanner(id)
+            .enqueue(object : Callback<Void>
+            {
+                override fun onResponse(call: Call<Void>, response: Response<Void>)
+                {
+                    Log.d("BANNER", "Response code: ${response.code()}")
+
+                    if (response.isSuccessful)
+                    {
+                        Toast.makeText(context, "Banner con id: $id borrado", Toast.LENGTH_SHORT).show()
+                        onFinish()
+                    }
+                    else
+                    {
+                        onFinish()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable)
+                {
+                    Toast.makeText(context, "Error al intentar borrar el banner", Toast.LENGTH_SHORT).show()
+                    onFinish()
+                }
+            })
+    }
+
     fun cargarBanners()
     {
         RetroFitClient.bannerService.obtenerBanners()
@@ -126,6 +157,26 @@ class BannerViewModel : ViewModel()
                 override fun onFailure(call: Call<List<Banner>?>, t: Throwable)
                 {
                     _banners.value = listOf()
+                }
+            })
+    }
+
+    fun cargarBannerItemsActivos()
+    {
+        RetroFitClient.bannerItemService.getAllByActivoBannerItems(true)
+            .enqueue(object : Callback<List<BannerItem>>
+            {
+                override fun onResponse(call: Call<List<BannerItem>>, response: Response<List<BannerItem>>)
+                {
+                    if (response.isSuccessful)
+                    {
+                        _items.value = response.body() ?: listOf()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<BannerItem>?>, t: Throwable)
+                {
+                    _items.value = listOf()
                 }
             })
     }
