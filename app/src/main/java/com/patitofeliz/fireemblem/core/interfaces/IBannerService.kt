@@ -11,7 +11,7 @@ interface IBannerService
 {
     @GET("movil/banner")
     fun obtenerBanners(): Call<List<Banner>>
-    @GET("movil/banner/{activo}")
+    @GET("movil/banner/activo/{activo}")
     fun obtenerBannersActivos(@Path("activo") activo: Boolean): Call<List<Banner>>
     @POST("movil/banner")
     fun guardarBanner(@Body banner: Banner): Call<Banner>
