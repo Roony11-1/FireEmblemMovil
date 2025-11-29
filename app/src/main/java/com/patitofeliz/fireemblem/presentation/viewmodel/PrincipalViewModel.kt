@@ -16,13 +16,28 @@ class PrincipalViewModel : ViewModel()
         // Aquí defines las opciones del menú principal
         _opcionesMenu.value = if (Manager.loginService.isLogged)
         {
-            listOf(
-                "Crear Unidad",
-                "Banners",
-                "Ver Unidades",
-                "Combate",
-                "Cámara",
-                "Salir")
+            // Admin
+            if (Manager.loginService.tipo == "admin")
+            {
+                mutableListOf(
+                    "Crear Unidad",
+                    "Banners",
+                    "Items",
+                    "Ver Unidades",
+                    "Combate",
+                    "Cámara",
+                    "Salir")
+            }
+            else
+            {
+                // Usuario normal logueado
+                mutableListOf(
+                    "Banners",
+                    "Ver Unidades",
+                    "Combate",
+                    "Cámara",
+                    "Salir")
+            }
         }
         else
         {
@@ -31,7 +46,8 @@ class PrincipalViewModel : ViewModel()
                 "Ver Unidades",
                 "Combate",
                 "Cámara",
-                "Salir")
+                "Salir"
+            )
         }
     }
 }

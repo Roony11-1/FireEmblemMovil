@@ -72,7 +72,8 @@ class PrincipalActivity : AppCompatActivity()
             "Combate" to { irCombate() },
             "Cámara" to { irCamara() },
             "Salir" to { salir() },
-            "Banners" to {irBanners()}
+            "Banners" to {irBanners()},
+            "Items" to {irItems()}
         )
 
         binding.lvPrincipal.setOnItemClickListener { parent, view, position, id ->
@@ -91,6 +92,13 @@ class PrincipalActivity : AppCompatActivity()
     private fun irBanners()
     {
         val intent = Intent(this, BannerActivity::class.java)
+
+        startActivity(intent)
+    }
+
+    private fun irItems()
+    {
+        val intent = Intent(this, ItemsActivity::class.java)
 
         startActivity(intent)
     }

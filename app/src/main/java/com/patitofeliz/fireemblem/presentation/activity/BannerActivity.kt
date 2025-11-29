@@ -127,7 +127,7 @@ class BannerActivity : AppCompatActivity()
             }
             binding.btnBorrarBanner.visibility = android.view.View.VISIBLE
             binding.btnBorrarBanner.setOnClickListener {
-                if (bannerSeleccionado.nombre=="SinSeleccionar")
+                if (bannerSeleccionado.id == null)
                 {
                     Toast.makeText(this, "Debes seleccionar un banner primero", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener

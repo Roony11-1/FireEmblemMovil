@@ -22,103 +22,149 @@ class BannerViewModel : ViewModel()
 
     fun guardarBanner(context: Context, banner: Banner, onFinish: () -> Unit)
     {
-        RetroFitClient.bannerService.guardarBanner(banner)
-            .enqueue(object : Callback<Banner>
-            {
-                override fun onResponse(call: Call<Banner>, response: Response<Banner>)
-                {
-                    Log.d("BANNER", "Response code: ${response.code()}")
+        Log.d("BANNER", "Intentando guardar banner")
+        Log.d("BANNER", "Banner enviado: $banner")
 
-                    if (response.isSuccessful)
-                    {
+        val call = RetroFitClient.bannerService.guardarBanner(banner)
+
+        // Debug: URL completa y headers
+        Log.d("BANNER", "URL de request: ${call.request().url}")
+        Log.d("BANNER", "Headers enviados: ${call.request().headers}")
+        Log.d("BANNER", "Body enviado: ${banner}") // esto imprime el objeto, útil para ver items
+
+        call.enqueue(object : Callback<Banner>
+        {
+            override fun onResponse(call: Call<Banner>, response: Response<Banner>) {
+                Log.d("BANNER", "Response code: ${response.code()}")
+                Log.d("BANNER", "Response message: ${response.message()}")
+                Log.d("BANNER", "Response body: ${response.body()}")
+                Log.d("BANNER", "Response errorBody: ${response.errorBody()?.string()}")
+
+                when
+                {
+                    response.isSuccessful -> {
                         val bannerRes = response.body()
-                        Log.d("BANNER", "Body: $bannerRes")
-
-                        if (bannerRes != null) {
-                            Toast.makeText(context, "Has agregado el banner: " + bannerRes.nombre, Toast.LENGTH_SHORT).show()
-                            onFinish()
-                        }
+                        Log.i("BANNER", "Banner guardado exitosamente: $bannerRes")
+                        Toast.makeText(context, "Has agregado el banner: ${bannerRes?.nombre}", Toast.LENGTH_SHORT).show()
                     }
-                    else
-                    {
-                        Log.e("BANNER", "Error body: ${response.errorBody()?.string()}")
-                        Toast.makeText(context, "Error del servidor", Toast.LENGTH_SHORT).show()
-                        onFinish()
+                    response.code() == 403 -> {
+                        Log.e("BANNER", "403 Forbidden: verificar roles o token de autenticación")
+                        Toast.makeText(context, "No tienes permisos para guardar este banner", Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        Log.e("BANNER", "Error desconocido al guardar banner")
+                        Toast.makeText(context, "Error al guardar el banner: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
+                onFinish()
+            }
 
-                override fun onFailure(call: Call<Banner>, t: Throwable)
-                {
-                    Toast.makeText(context, "Error al intentar guardar el banner", Toast.LENGTH_SHORT).show()
-                    onFinish()
-                }
-            })
+            override fun onFailure(call: Call<Banner>, t: Throwable)
+            {
+                Log.e("BANNER", "Fallo al hacer request guardarBanner", t)
+                Toast.makeText(context, "Error de conexión al intentar guardar el banner", Toast.LENGTH_SHORT).show()
+                onFinish()
+            }
+        })
     }
 
     fun updateBanner(context: Context, id: Int, banner: Banner, onFinish: () -> Unit)
     {
-        RetroFitClient.bannerService.updatearBanner(id, banner)
-            .enqueue(object : Callback<Banner>
+        Log.d("BANNER", "Intentando actualizar banner con id: $id")
+        Log.d("BANNER", "Banner enviado: $banner")
+
+        val call = RetroFitClient.bannerService.updatearBanner(id, banner)
+
+        // Debug: URL completa y headers
+        Log.d("BANNER", "URL de request: ${call.request().url}")
+        Log.d("BANNER", "Headers enviados: ${call.request().headers}")
+
+        call.enqueue(object : Callback<Banner>
+        {
+            override fun onResponse(call: Call<Banner>, response: Response<Banner>)
             {
-                override fun onResponse(call: Call<Banner>, response: Response<Banner>)
-                {
-                    Log.d("BANNER", "Response code: ${response.code()}")
+                Log.d("BANNER", "Response code: ${response.code()}")
+                Log.d("BANNER", "Response message: ${response.message()}")
+                Log.d("BANNER", "Response body: ${response.body()}")
+                Log.d("BANNER", "Response errorBody: ${response.errorBody()?.string()}")
 
-                    if (response.isSuccessful)
-                    {
+                when
+                {
+                    response.isSuccessful -> {
                         val bannerRes = response.body()
-                        Log.d("BANNER", "Body: $bannerRes")
-
-                        if (bannerRes != null) {
-                            Toast.makeText(context, "Has actualizado el banner: " + bannerRes.nombre, Toast.LENGTH_SHORT).show()
-                            onFinish()
-                        }
+                        Log.i("BANNER", "Banner actualizado exitosamente: $bannerRes")
+                        Toast.makeText(context, "Has actualizado el banner: ${bannerRes?.nombre}", Toast.LENGTH_SHORT).show()
                     }
-                    else
-                    {
-                        Log.e("BANNER", "Error body: ${response.errorBody()?.string()}")
-                        Toast.makeText(context, "Error del servidor", Toast.LENGTH_SHORT).show()
-                        onFinish()
+                    response.code() == 403 -> {
+                        Log.e("BANNER", "403 Forbidden: verificar roles o token de autenticación")
+                        Toast.makeText(context, "No tienes permisos para actualizar este banner", Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        Log.e("BANNER", "Error desconocido al actualizar banner")
+                        Toast.makeText(context, "Error al actualizar el banner: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
+                onFinish()
+            }
 
-                override fun onFailure(call: Call<Banner>, t: Throwable)
-                {
-                    Toast.makeText(context, "Error al intentar actualizar el banner", Toast.LENGTH_SHORT).show()
-                    onFinish()
-                }
-            })
+            override fun onFailure(call: Call<Banner>, t: Throwable) {
+                Log.e("BANNER", "Fallo al hacer request updateBanner", t)
+                Toast.makeText(context, "Error de conexión al intentar actualizar el banner", Toast.LENGTH_SHORT).show()
+                onFinish()
+            }
+        })
     }
 
     fun deleteBanner(context: Context, id: Int?, onFinish: () -> Unit)
     {
         if (id == null)
+        {
+            Log.w("BANNER", "deleteBanner llamado con id nulo")
             return
+        }
 
-        RetroFitClient.bannerService.deleteByIdBanner(id)
-            .enqueue(object : Callback<Void>
+        Log.d("BANNER", "Intentando borrar banner con id: $id")
+
+        val call = RetroFitClient.bannerService.deleteByIdBanner(id)
+
+        // Debug URL completa y headers
+        Log.d("BANNER", "URL de request: ${call.request().url}")
+        Log.d("BANNER", "Headers enviados: ${call.request().headers}")
+
+        call.enqueue(object : Callback<Void>
+        {
+            override fun onResponse(call: Call<Void>, response: Response<Void>)
             {
-                override fun onResponse(call: Call<Void>, response: Response<Void>)
-                {
-                    Log.d("BANNER", "Response code: ${response.code()}")
+                Log.d("BANNER", "Response code: ${response.code()}")
+                Log.d("BANNER", "Response message: ${response.message()}")
+                Log.d("BANNER", "Response body: ${response.body()}")
+                Log.d("BANNER", "Response errorBody: ${response.errorBody()?.string()}")
 
-                    if (response.isSuccessful)
-                    {
+                when
+                {
+                    response.isSuccessful -> {
                         Toast.makeText(context, "Banner con id: $id borrado", Toast.LENGTH_SHORT).show()
-                        onFinish()
+                        Log.i("BANNER", "Banner borrado exitosamente")
                     }
-                    else
-                    {
-                        onFinish()
+                    response.code() == 403 -> {
+                        Toast.makeText(context, "No tienes permisos para borrar este banner", Toast.LENGTH_LONG).show()
+                        Log.e("BANNER", "403 Forbidden: verificar roles o token de autenticación")
+                    }
+                    else -> {
+                        Toast.makeText(context, "Error al borrar el banner: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Log.e("BANNER", "Error desconocido al borrar banner")
                     }
                 }
+                onFinish()
+            }
 
-                override fun onFailure(call: Call<Void>, t: Throwable)
-                {
-                    Toast.makeText(context, "Error al intentar borrar el banner", Toast.LENGTH_SHORT).show()
-                    onFinish()
-                }
-            })
+            override fun onFailure(call: Call<Void>, t: Throwable)
+            {
+                Log.e("BANNER", "Fallo al hacer request deleteBanner", t)
+                Toast.makeText(context, "Error de conexión al intentar borrar el banner", Toast.LENGTH_SHORT).show()
+                onFinish()
+            }
+        })
     }
 
     fun cargarBanners()
