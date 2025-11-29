@@ -7,4 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".presentation.activity.ItemsActivity">
 
+    <ListView
+        android:id="@+id/lvActivityItems"
+        android:layout_width="407dp"
+        android:layout_height="456dp"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="74dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

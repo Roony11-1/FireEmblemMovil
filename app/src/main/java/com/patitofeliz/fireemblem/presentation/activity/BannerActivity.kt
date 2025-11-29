@@ -195,6 +195,16 @@ class BannerActivity : AppCompatActivity()
 
     private fun mostrarDialogoCrearBanner(banner: Banner)
     {
+        val bannerActualizado = viewModel.banners.value?.firstOrNull { it.id == banner.id } ?: banner
+
+        val bannerModificado = Banner(
+            id = bannerActualizado.id,
+            nombre = bannerActualizado.nombre,
+            descripcion = bannerActualizado.descripcion,
+            activo = bannerActualizado.activo,
+            items = bannerActualizado.items
+        )
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_crear_banner, null)
 
         val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
@@ -203,13 +213,6 @@ class BannerActivity : AppCompatActivity()
         val lvItems = dialogView.findViewById<ListView>(R.id.lvAddBannerItems)
         val spItems = dialogView.findViewById<Spinner>(R.id.spAddBannerItems)
         val btnAddItem = dialogView.findViewById<Button>(R.id.btnAddBannerItem)
-
-        val bannerModificado = Banner(
-            id = banner.id,
-            nombre = banner.nombre,
-            descripcion = banner.descripcion,
-            activo = banner.activo,
-            items = banner.items)
 
         val adapterItems = crearAdapter<BannerItem>()
         val adapterSpItems = crearAdapter<BannerItem>()
@@ -229,6 +232,29 @@ class BannerActivity : AppCompatActivity()
         else
         {
             adapterItems.add(BannerItem(null, nombre = "Sin items", null, null, null, null, null))
+        }
+
+        lvItems.setOnItemClickListener { _, _, position, _ ->
+            val itemSeleccionado = adapterItems.getItem(position)
+            if (itemSeleccionado?.id != null)
+            {
+                AlertDialog.Builder(this)
+                    .setTitle("Eliminar item")
+                    .setMessage("¿Deseas quitar '${itemSeleccionado.nombre}' de la lista?")
+                    .setPositiveButton("Sí") { _, _ ->
+                        adapterItems.remove(itemSeleccionado)
+                        adapterItems.notifyDataSetChanged()
+
+                        // placeholder
+                        if (adapterItems.count == 0)
+                        {
+                            val placeholder = BannerItem(null, nombre = "Sin items", null, null, null, null, null)
+                            adapterItems.add(placeholder)
+                        }
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+            }
         }
 
         etNombre.setText(bannerModificado.nombre)

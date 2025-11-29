@@ -226,4 +226,15 @@ class BannerViewModel : ViewModel()
                 }
             })
     }
+
+    fun actualizarBannerLocal(bannerActualizado: Banner)
+    {
+        val actuales = _banners.value?.toMutableList() ?: mutableListOf()
+        val index = actuales.indexOfFirst { it.id == bannerActualizado.id }
+        if (index != -1)
+        {
+            actuales[index] = bannerActualizado
+            _banners.value = actuales
+        }
+    }
 }
