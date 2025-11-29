@@ -3,8 +3,11 @@ package com.patitofeliz.fireemblem.presentation.viewmodel
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.patitofeliz.fireemblem.Manager
 import com.patitofeliz.fireemblem.config.RetroFitClient
+import com.patitofeliz.fireemblem.core.model.api.Banner
 import com.patitofeliz.fireemblem.core.model.api.PullResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,6 +15,11 @@ import retrofit2.Response
 
 class PullViewModel
 {
+    // Para mostrar un historico de tiradas actuales
+    // solo de la sesion de el activity para que el global
+    private val _tiradas = MutableLiveData<List<String>>()
+    public val tiradas: LiveData<List<String>> get() = _tiradas
+
     fun pull(context: Context, bannerId:Int)
     {
         RetroFitClient.gachaService.pull(bannerId, Manager.loginService.idLogin)

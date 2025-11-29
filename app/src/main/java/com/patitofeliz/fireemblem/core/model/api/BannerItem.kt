@@ -5,7 +5,8 @@ data class BannerItem(val id: Int?,
     val clase: String?,
     val tipo: String?,
     val rareza: String?,
-    val probabilidad: Double?)
+    val probabilidad: Double?,
+    val activo: Boolean?)
 {
     override fun toString(): String
     {
